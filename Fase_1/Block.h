@@ -11,7 +11,7 @@ class Block {
 public:
 
 	Block();
-	Block(const nlohmann::json& json);
+	BlockChain(const std::string& path);
 
 	std::vector<std::string> getMerklePath(std::string txid);
 	FullCompleteTree<std::string> getMerkleTree();

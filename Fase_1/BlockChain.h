@@ -9,6 +9,7 @@
 class BlockChain {
 public:
 	BlockChain(const nlohmann::json& path);
+	void saveChain();	//Guarda la Chain en "chain.txt"
 
 private:
 	std::vector<Block>	chain;

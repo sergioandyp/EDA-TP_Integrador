@@ -3,22 +3,23 @@
 #include <nlohmann/json.hpp>
 #include <fstream>
 #include "BlockChain.h"
-
+#define DEBUG
 using namespace std;
 
 void testTree();
 
 int main() {
 
-	//INCLUIR RUTA DEL JSON
+	//Cargamos el path
 	std::string path = "blockchain_sample_0.json";
-	ifstream inputFile = ifstream(path);
-	nlohmann::json data;
-	inputFile >> data;
-	inputFile.close();
-	BlockChain chain(data);
-	//https://github.com/EDA-ITBA/class-json/blob/main/samples/json/json/main.cpp
 
+	//Creamos la blockchain con el json de base.
+	BlockChain chain(path);
+
+#ifdef DEBUG
+	//Guardamos el chain en un archivo.
+	chain.saveChain();
+#endif
 
 	return 0;
 }

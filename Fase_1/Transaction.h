@@ -6,8 +6,8 @@
 #include <nlohmann/json.hpp>
 
 class TransactionEntry {
-
-	TransactionEntry(const nlohmann::json& json);
+public:
+	TransactionEntry(const nlohmann::json& fromJSON);
 
 private:
 	std::string blockId;
@@ -17,7 +17,7 @@ private:
 };
 
 class TransactionOut {
-
+public:
 	TransactionOut(const nlohmann::json& fromJSON);
 
 private:
