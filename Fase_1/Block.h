@@ -17,11 +17,15 @@ public:
 	FullCompleteTree<std::string> getMerkleTree();
 
 private:
+
 	std::vector<Transaction> txs;
 	unsigned int nonce;
 	std::string blockId;
 	std::string prevBlockId;
 	std::string merkleRoot;
+
+	unsigned int generateID(unsigned char* str);
+	std::string hexCode(unsigned int id);
 };
 
 class Node {

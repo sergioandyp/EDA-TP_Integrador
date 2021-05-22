@@ -25,16 +25,22 @@ public:
 	// Crea un arbol completo y lleno con nOfLeafs hojas y todos sus nodos con valor defaultVal
 	// Si nOfLeafs no es un número par, se toma el numero par inmediatamente superior
 	FullCompleteTree(unsigned int nOfLeafs, T defaultVal = T()) :
-		height(ceil(log2(nOfLeafs))), tree(height)
+		height((unsigned int)ceil(log2(nOfLeafs))), tree(height+1)
 	{
+		if (height > 0) {
+			for (unsigned int i = 0; i < height; i++) {
+				tree[i].resize((unsigned int)exp2(i), defaultVal);
+			}
 
-		for (unsigned int i = 0; i < height - 1; i++) {
-			tree[i].resize(exp2(i), defaultVal);
+			tree[height].resize(nOfLeafs, defaultVal);
 		}
-
-		tree[height - 1].resize(nOfLeafs);
-
 	}
+
+	// Devuelve la altura total del arbol
+	unsigned int getRows() {
+		return tree.size();
+	}
+
 
 	// Esta clase se usa para sobrecargar el operador[] y poder acceder y modificar nodos a través de tree[][]
 	class TreeRow {
@@ -43,7 +49,12 @@ public:
 		{
 		}
 
-		T operator[](unsigned int index) {
+		// Devuelve la cantidad de nodos a profundidad height_
+		unsigned int size() {
+			return row.size();
+		}
+
+		T& operator[](unsigned int index) {
 			return row[index];
 		}
 
@@ -58,14 +69,14 @@ public:
 		return TreeRow(*this, height);
 	}
 
+
 private:
+	// Altura del arbol. Es fija ya que no se pueden agregar ni eliminar nodos.
+	const unsigned int height;	// Declarar este primero para poder usarlo para construir tree
+
 	// Estructura del arbol como vector de pisos
 	// Donde cada piso es un vector de nodos que estan a la misma altura
 	std::vector<std::vector<T>> tree;
-
-	// Altura del arbol. Es fija ya que no se pueden agregar ni eliminar nodos.
-	unsigned int height;
-
 };
 
 #endif //_FULL_COMPLETE_TREE_H_
