@@ -10,11 +10,18 @@
 class Block {
 public:
 
-	Block();
-	BlockChain(const std::string& path);
+	Block(const nlohmann::json& path);
 
-	std::vector<std::string> getMerklePath(std::string txid);
+	//std::vector<std::string> getMerklePath(std::string txid);
 	FullCompleteTree<std::string> getMerkleTree();
+
+	
+	std::string getBlockId();
+	std::string getPrevBlockId();
+	std::string getMerkleRoot();
+	std::vector<Transaction> getTxs();
+	unsigned int getNonce();
+
 
 private:
 
@@ -24,8 +31,8 @@ private:
 	std::string prevBlockId;
 	std::string merkleRoot;
 
-	unsigned int generateID(unsigned char* str);
-	std::string hexCode(unsigned int id);
+	std::string hexCode(const unsigned int id);
+	unsigned int generateID(const unsigned char* str);
 };
 
 class Node {

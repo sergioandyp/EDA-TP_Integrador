@@ -8,6 +8,10 @@
 class TransactionEntry {
 public:
 	TransactionEntry(const nlohmann::json& fromJSON);
+	std::string getBlockId();
+	std::string getTxId();
+	std::string getSignature();
+	double getOutputId();
 
 private:
 	std::string blockId;
@@ -19,6 +23,8 @@ private:
 class TransactionOut {
 public:
 	TransactionOut(const nlohmann::json& fromJSON);
+	std::string getPublicId();
+	double getAmount();
 
 private:
 	std::string publicId;
@@ -27,9 +33,10 @@ private:
 
 class Transaction {
 public:
-	Transaction();
 	Transaction(const nlohmann::json& json);
 	std::string getID();
+	std::vector<TransactionEntry> getEntries();
+	std::vector<TransactionOut> getOutputs();
 
 private:
 	std::string id;

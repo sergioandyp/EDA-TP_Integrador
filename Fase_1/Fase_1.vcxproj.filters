@@ -18,6 +18,9 @@
     <None Include="blockchain_sample_0.json">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="blockchain_sample_1.json">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -46,5 +49,10 @@
     <ClInclude Include="FullCompleteTree.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="chain.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>

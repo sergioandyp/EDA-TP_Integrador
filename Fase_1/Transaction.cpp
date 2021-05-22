@@ -46,3 +46,31 @@ Transaction::Transaction(const nlohmann::json& fromJSON) {
 string Transaction::getID(){
 	return	id;
 }
+
+vector<TransactionEntry> Transaction::getEntries() {
+	return entries;
+}
+
+vector<TransactionOut> Transaction::getOutputs(){
+	return outputs;
+}
+
+string TransactionEntry ::getBlockId(){
+	return blockId;
+}
+string TransactionEntry::getTxId(){
+	return txId;
+}
+string TransactionEntry::getSignature(){
+	return signature;
+}
+double TransactionEntry::getOutputId(){
+	return outputId;
+}
+
+string TransactionOut::getPublicId(){
+	return publicId;
+}
+double TransactionOut::getAmount(){
+	return amount;
+}

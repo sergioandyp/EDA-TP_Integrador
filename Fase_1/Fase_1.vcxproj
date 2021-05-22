@@ -140,6 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="blockchain_sample_0.json" />
+    <None Include="blockchain_sample_1.json" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Block.cpp" />
@@ -152,6 +153,9 @@
     <ClInclude Include="BlockChain.h" />
     <ClInclude Include="FullCompleteTree.h" />
     <ClInclude Include="Transaction.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="chain.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

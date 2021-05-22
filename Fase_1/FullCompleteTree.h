@@ -69,10 +69,9 @@ public:
 		return TreeRow(*this, height);
 	}
 
-
 private:
 	// Altura del arbol. Es fija ya que no se pueden agregar ni eliminar nodos.
-	const unsigned int height;	// Declarar este primero para poder usarlo para construir tree
+	unsigned int height;	// Declarar este primero para poder usarlo para construir tree
 
 	// Estructura del arbol como vector de pisos
 	// Donde cada piso es un vector de nodos que estan a la misma altura

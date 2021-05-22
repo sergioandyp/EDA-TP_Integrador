@@ -1,0 +1,342 @@
+Bloque 0
+	blockId: 13878957
+	nonce: 4733
+	prevBlockId: 00000000
+	merkleRoot: 80EEF9F8
+	Transacción 0
+		Entrie 0
+			blockid:00000BA8
+			txid:00000B2F
+			signature:00001265
+			outputIndex:0
+		Entrie 1
+			blockid:0000031F
+			txid:00001112
+			signature:0000079E
+			outputIndex:3
+		Out 0
+			publicId:91218912199121891218
+			amount:0
+		Out 1
+			publicId:91218912199121891218
+			amount:1
+		Out 2
+			publicId:91218912199121891218
+			amount:0
+		Out 3
+			publicId:91218912199121891218
+			amount:1
+		Out 4
+			publicId:91218912199121891218
+			amount:1
+	Transacción 1
+		Entrie 0
+			blockid:00000EAE
+			txid:00000A4B
+			signature:00000679
+			outputIndex:3
+		Entrie 1
+			blockid:00000FB5
+			txid:00000D86
+			signature:00000902
+			outputIndex:0
+		Entrie 2
+			blockid:00001060
+			txid:000004AF
+			signature:000011E1
+			outputIndex:1
+		Entrie 3
+			blockid:00000375
+			txid:000006E1
+			signature:00000A9B
+			outputIndex:0
+		Out 0
+			publicId:91218912199121891218
+			amount:1
+Bloque 1
+	blockId: 944EC375
+	nonce: 6596
+	prevBlockId: 13878957
+	merkleRoot: 62F34A8A
+	Transacción 0
+		Entrie 0
+			blockid:00000239
+			txid:0000078E
+			signature:000005FE
+			outputIndex:3
+		Out 0
+			publicId:91218912199121891218
+			amount:1
+		Out 1
+			publicId:91218912199121891218
+			amount:1
+	Transacción 1
+		Entrie 0
+			blockid:00000350
+			txid:000002C6
+			signature:00000CA6
+			outputIndex:4
+		Entrie 1
+			blockid:000012AA
+			txid:0000014C
+			signature:00000BCF
+			outputIndex:3
+		Entrie 2
+			blockid:00000C4F
+			txid:0000040D
+			signature:000008F0
+			outputIndex:3
+		Entrie 3
+			blockid:000008F2
+			txid:0000075D
+			signature:0000009A
+			outputIndex:1
+		Entrie 4
+			blockid:00001194
+			txid:00000751
+			signature:00000114
+			outputIndex:2
+		Out 0
+			publicId:91218912199121891218
+			amount:1
+	Transacción 2
+		Entrie 0
+			blockid:00000FDD
+			txid:00000A3D
+			signature:000012EF
+			outputIndex:3
+		Entrie 1
+			blockid:0000087E
+			txid:000003CF
+			signature:000005C2
+			outputIndex:0
+		Entrie 2
+			blockid:00000299
+			txid:00001172
+			signature:00000B2D
+			outputIndex:3
+		Entrie 3
+			blockid:00001096
+			txid:00000D73
+			signature:0000128E
+			outputIndex:2
+		Entrie 4
+			blockid:000009A8
+			txid:00000F87
+			signature:00000A99
+			outputIndex:1
+		Out 0
+			publicId:91218912199121891218
+			amount:1
+		Out 1
+			publicId:91218912199121891218
+			amount:2
+		Out 2
+			publicId:91218912199121891218
+			amount:2
+		Out 3
+			publicId:91218912199121891218
+			amount:0
+		Out 4
+			publicId:91218912199121891218
+			amount:1
+	Transacción 3
+		Entrie 0
+			blockid:000000E8
+			txid:00001103
+			signature:00000BFD
+			outputIndex:2
+		Out 0
+			publicId:91218912199121891218
+			amount:1
+		Out 1
+			publicId:91218912199121891218
+			amount:0
+Bloque 2
+	blockId: 24C06253
+	nonce: 7929
+	prevBlockId: 944EC375
+	merkleRoot: 33C141D4
+	Transacción 0
+		Entrie 0
+			blockid:00000E8C
+			txid:00000D1B
+			signature:00000772
+			outputIndex:1
+		Entrie 1
+			blockid:00000802
+			txid:000005D0
+			signature:00000937
+			outputIndex:4
+		Entrie 2
+			blockid:00001081
+			txid:00000801
+			signature:0000135F
+			outputIndex:3
+		Entrie 3
+			blockid:00000480
+			txid:0000114D
+			signature:00000F6A
+			outputIndex:0
+		Entrie 4
+			blockid:000005CB
+			txid:00001365
+			signature:000001AF
+			outputIndex:0
+		Out 0
+			publicId:91218912199121891218
+			amount:0
+		Out 1
+			publicId:91218912199121891218
+			amount:0
+		Out 2
+			publicId:91218912199121891218
+			amount:1
+		Out 3
+			publicId:91218912199121891218
+			amount:2
+	Transacción 1
+		Entrie 0
+			blockid:0000119B
+			txid:000010A9
+			signature:00000257
+			outputIndex:1
+		Out 0
+			publicId:91218912199121891218
+			amount:1
+		Out 1
+			publicId:91218912199121891218
+			amount:1
+		Out 2
+			publicId:91218912199121891218
+			amount:1
+		Out 3
+			publicId:91218912199121891218
+			amount:1
+	Transacción 2
+		Entrie 0
+			blockid:00000CE8
+			txid:00000C0B
+			signature:00000CC4
+			outputIndex:0
+		Entrie 1
+			blockid:000005EF
+			txid:000010BD
+			signature:000007E1
+			outputIndex:3
+		Entrie 2
+			blockid:00001330
+			txid:00000BB2
+			signature:00001058
+			outputIndex:2
+		Out 0
+			publicId:91218912199121891218
+			amount:1
+		Out 1
+			publicId:91218912199121891218
+			amount:1
+		Out 2
+			publicId:91218912199121891218
+			amount:1
+		Out 3
+			publicId:91218912199121891218
+			amount:0
+	Transacción 3
+		Entrie 0
+			blockid:0000078C
+			txid:000012D9
+			signature:00000811
+			outputIndex:2
+		Entrie 1
+			blockid:000009A0
+			txid:00000F36
+			signature:00000AAA
+			outputIndex:2
+		Out 0
+			publicId:91218912199121891218
+			amount:2
+Bloque 3
+	blockId: 164BD7B1
+	nonce: 4935
+	prevBlockId: 24C06253
+	merkleRoot: 596B5112
+	Transacción 0
+		Entrie 0
+			blockid:000000F4
+			txid:00000F06
+			signature:00000065
+			outputIndex:0
+		Entrie 1
+			blockid:000009B4
+			txid:000002D6
+			signature:00000711
+			outputIndex:2
+		Out 0
+			publicId:91218912199121891218
+			amount:0
+		Out 1
+			publicId:91218912199121891218
+			amount:1
+	Transacción 1
+		Entrie 0
+			blockid:00000FAB
+			txid:00000190
+			signature:000002E7
+			outputIndex:3
+		Out 0
+			publicId:91218912199121891218
+			amount:0
+		Out 1
+			publicId:91218912199121891218
+			amount:1
+		Out 2
+			publicId:91218912199121891218
+			amount:0
+		Out 3
+			publicId:91218912199121891218
+			amount:0
+		Out 4
+			publicId:91218912199121891218
+			amount:2
+	Transacción 2
+		Entrie 0
+			blockid:00000D8C
+			txid:00000BA8
+			signature:00000E1E
+			outputIndex:2
+		Out 0
+			publicId:91218912199121891218
+			amount:1
+	Transacción 3
+		Entrie 0
+			blockid:00001038
+			txid:00000FB3
+			signature:000001A6
+			outputIndex:0
+		Entrie 1
+			blockid:00000AC1
+			txid:0000078D
+			signature:000007B0
+			outputIndex:2
+		Entrie 2
+			blockid:00000FBF
+			txid:000008CC
+			signature:000003E5
+			outputIndex:4
+		Out 0
+			publicId:91218912199121891218
+			amount:0
+Bloque 4
+	blockId: 534F219B
+	nonce: 169
+	prevBlockId: 164BD7B1
+	merkleRoot: AD45D3EA
+	Transacción 0
+		Entrie 0
+			blockid:00000CBA
+			txid:0000086B
+			signature:00000209
+			outputIndex:1
+		Out 0
+			publicId:91218912199121891218
+			amount:0
