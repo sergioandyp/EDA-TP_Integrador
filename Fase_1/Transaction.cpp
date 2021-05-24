@@ -1,45 +1,35 @@
 #include "Transaction.h"
 #include <iostream>
-//#define DEBUG
+#include <nlohmann/json.hpp>
 using namespace std;
+using namespace nlohmann;
 
-TransactionEntry::TransactionEntry(const nlohmann::json& fromJSON) {
+TransactionEntry::TransactionEntry(const std::string& jsonString) {
+	nlohmann::json fromJSON = nlohmann::json::parse(jsonString);
 	blockId = fromJSON["blockid"];
 	txId = fromJSON["txid"];
 	signature = fromJSON["signature"]; 
 	outputId = fromJSON["outputIndex"];
-	#ifdef DEBUG
-	cout << "\t\t Entries:" << endl;
-	cout << "\t\t\tblockid:" << blockId << endl;
-	cout << "\t\t\ttxid:" << txId << endl;
-	cout << "\t\t\tsignature:" << signature << endl;
-	cout << "\t\t\toutputIndex:" << outputId << endl;
-	#endif
 }
 
-TransactionOut::TransactionOut(const nlohmann::json& fromJSON) {
+TransactionOut::TransactionOut(const std::string& jsonString) {
+	nlohmann::json fromJSON = nlohmann::json::parse(jsonString);
 	publicId = fromJSON["publicid"]; 
 	amount = fromJSON["amount"]; 
-	#ifdef DEBUG
-	cout << "\t\t Outs:" << endl;
-	cout << "\t\t\tpublicid:" << publicId << endl;
-	cout << "\t\t\tamount:" << amount << endl;
-	#endif
 }
 
-Transaction::Transaction(const nlohmann::json& fromJSON) {
-	#ifdef DEBUG
-	cout << "\tTransacciones:" << endl;
-	#endif	
+Transaction::Transaction(const std::string& jsonString) {
+	json fromJSON = nlohmann::json::parse(jsonString);
+
 	id = fromJSON["txid"];
 	// Creamos y appendeamos las entries
 	for (int i = 0; i < fromJSON["vin"].size(); i++) {
-		entries.push_back(fromJSON["vin"][i]);
+		entries.push_back(TransactionEntry(fromJSON["vin"][i].dump()));
 	}
 
 	// Creamos y appendeamos las outputs
 	for (int i = 0; i < fromJSON["vout"].size(); i++) {
-		outputs.push_back(fromJSON["vout"][i]);
+		outputs.push_back(TransactionOut(fromJSON["vout"][i].dump()));
 	}
 }
 

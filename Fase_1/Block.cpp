@@ -1,29 +1,26 @@
 #include "Block.h"
 #include "Transaction.h"
 #include <iostream>
-//#define DEBUG
+#include <string>
 #include <cmath>
+#include <nlohmann/json.hpp>
 
 using namespace std;
+using namespace nlohmann;
 
-Block::Block(const nlohmann::json& fromJSON) {
+Block::Block(const std::string& jsonString) {
+	json fromJSON =  nlohmann::json::parse(jsonString);
 
 	//Para cada transacción, creamos la estructura y la appendeamos.
 	for (int i = 0; i < fromJSON["tx"].size(); i++) {
-		txs.push_back(Transaction(fromJSON["tx"][i]));
+		//string aux = 
+		txs.push_back(Transaction((fromJSON["tx"][i]).dump()));
 	}
 
 	nonce = fromJSON["nonce"];
 	blockId = fromJSON["blockid"];
 	prevBlockId = fromJSON["previousblockid"];
 	merkleRoot = fromJSON["merkleroot"];
-	
-	#ifdef DEBUG
-	cout << "\t nonce: " << nonce << endl;
-	cout << "\t blockid: " << blockId << endl;
-	cout << "\t previousblockid: " << prevBlockId << endl;
-	cout << "\t merkleroot: " << merkleRoot << endl;
-	#endif
 }
 
 

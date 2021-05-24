@@ -5,12 +5,11 @@
 #include <string>
 #include "FullCompleteTree.h"
 #include "Transaction.h"
-#include <nlohmann/json.hpp>
 
 class Block {
 public:
 
-	Block(const nlohmann::json& path);
+	Block(const std::string& jsonString);
 
 	//std::vector<std::string> getMerklePath(std::string txid);
 	FullCompleteTree<std::string> getMerkleTree();

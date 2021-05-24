@@ -4,7 +4,6 @@
 #include <vector>
 #include <string>
 #include "Block.h"
-#include <nlohmann/json.hpp>
 
 class BlockChain {
 public:

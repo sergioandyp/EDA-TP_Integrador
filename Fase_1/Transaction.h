@@ -3,11 +3,10 @@
 
 #include <string>
 #include <vector>
-#include <nlohmann/json.hpp>
 
 class TransactionEntry {
 public:
-	TransactionEntry(const nlohmann::json& fromJSON);
+	TransactionEntry(const std::string& jsonString);
 	std::string getBlockId();
 	std::string getTxId();
 	std::string getSignature();
@@ -22,7 +21,7 @@ private:
 
 class TransactionOut {
 public:
-	TransactionOut(const nlohmann::json& fromJSON);
+	TransactionOut(const std::string& jsonString);
 	std::string getPublicId();
 	double getAmount();
 
@@ -33,7 +32,7 @@ private:
 
 class Transaction {
 public:
-	Transaction(const nlohmann::json& json);
+	Transaction(const std::string& jsonString);
 	std::string getID();
 	std::vector<TransactionEntry> getEntries();
 	std::vector<TransactionOut> getOutputs();

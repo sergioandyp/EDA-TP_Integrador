@@ -4,23 +4,20 @@
 #include <iostream>
 #include <fstream>      
 #include "nlohmann/json.hpp"
-//#define DEBUG
+
 using namespace nlohmann;
 using namespace std;
 
 BlockChain::BlockChain(const std::string& path) {
 	// Cargamos el .json y lo formateamos a json
 	ifstream inputFile = ifstream(path);
-	nlohmann::json j;
+	json j;
 	inputFile >> j;
 	inputFile.close();
 
 	for (int i = 0; i < j.size(); i++) {
-		#ifdef DEBUG
-		std::cout << "Bloque" << i << ':' << std::endl;
-		#endif
 		//Creamos y appendeamos bloque por bloque.
-		chain.push_back(Block(j[i]));
+		chain.push_back( Block(j[i].dump()) );
 	}
 }
 
