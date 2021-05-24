@@ -8,17 +8,46 @@
 using namespace nlohmann;
 using namespace std;
 
-BlockChain::BlockChain(const std::string& path) {
-	// Cargamos el .json y lo formateamos a json
-	ifstream inputFile = ifstream(path);
-	json j;
-	inputFile >> j;
-	inputFile.close();
+BlockChain::BlockChain()
+{
+}
 
-	for (int i = 0; i < j.size(); i++) {
-		//Creamos y appendeamos bloque por bloque.
-		chain.push_back( Block(j[i].dump()) );
+//BlockChain::BlockChain(const std::string& path) {
+//	// Cargamos el .json y lo formateamos a json
+//	ifstream inputFile = ifstream(path);
+//	json j;
+//	inputFile >> j;
+//	inputFile.close();
+
+//	for (int i = 0; i < j.size(); i++) {
+//		//Creamos y appendeamos bloque por bloque.
+//		chain.push_back( Block(j[i].dump()) );
+//	}
+//}
+
+int BlockChain::buildFromPath(const std::string& path){
+
+	chain.clear();
+
+	// Cargamos el .json y lo formateamos a json
+	try {
+		ifstream inputFile = ifstream(path);
+		json j;
+		inputFile >> j;
+		inputFile.close();
+
+		for (int i = 0; i < j.size(); i++) {
+			//Creamos y appendeamos bloque por bloque.
+			chain.push_back(Block(j[i].dump()));
+		}
+
+		return 0;
 	}
+	catch (const exception& e){
+		return 1;	// Si tira excepcion, devuelvo error
+	}
+
+
 }
 
 void BlockChain::saveChain() {
@@ -27,12 +56,12 @@ void BlockChain::saveChain() {
 	for (int bloquesito = 0 ; bloquesito < chain.size(); bloquesito++) {
 		file << "Bloque " << bloquesito << endl;
 		file << "\tblockId: " << chain[bloquesito].getBlockId() << endl;
-		file << "\tnonce: " << chain[bloquesito].getNonce() << endl;
+		file << "\tnonce: " << chain[bloquesito].getBlockNonce() << endl;
 		file << "\tprevBlockId: " << chain[bloquesito].getPrevBlockId() << endl;
 		file << "\tmerkleRoot: " << chain[bloquesito].getMerkleRoot() << endl;
 
-		for (int trans= 0; trans < ((chain[bloquesito]).getTxs()).size(); trans++) {
-			Transaction transBlock = ((chain[bloquesito]).getTxs())[trans];
+		for (int trans= 0; trans < ((chain[bloquesito]).getBlockTxs()).size(); trans++) {
+			Transaction transBlock = ((chain[bloquesito]).getBlockTxs())[trans];
 			
 			file << "\tTransacción " << trans << endl;
 			

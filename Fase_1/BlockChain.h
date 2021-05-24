@@ -7,7 +7,9 @@
 
 class BlockChain {
 public:
-	BlockChain(const std::string& path);
+	BlockChain();
+	// BlockChain(const std::string& path);
+	int buildFromPath(const std::string& path);
 	void saveChain();	//Guarda la Chain en "chain.txt"
 	std::vector<Block> getChain();
 

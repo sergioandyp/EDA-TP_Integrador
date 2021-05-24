@@ -37,6 +37,13 @@ string Transaction::getID(){
 	return	id;
 }
 
+int Transaction::getNTxin() {
+	return (int) entries.size();
+}
+int Transaction::getNTxout() {
+	return (int) outputs.size();
+}
+
 vector<TransactionEntry> Transaction::getEntries() {
 	return entries;
 }

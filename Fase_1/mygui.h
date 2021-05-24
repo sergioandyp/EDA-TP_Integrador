@@ -7,8 +7,9 @@
 #include <allegro5/allegro_color.h>
 #include <allegro5/allegro_image.h>
 
-#include "imgui.h"
-#include "imgui_impl_allegro5.h"
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_allegro5.h"
+#include "BlockChain.h"
 #include <string>
 #include <vector>
 
@@ -40,7 +41,9 @@ private:
 	
 	char bufPath[MAXIMUM_PATH_LENGTH + 1] = { 0 };
 	std::string path;
-	int n;
-	int curr; // current block
+	Block block;
 	std::string pathtext;
+	BlockChain chain;
+	FullCompleteTree<std::string> merkleTree;
+	bool validRoot;
 };

@@ -36,11 +36,12 @@ public:
 	std::string getID();
 	std::vector<TransactionEntry> getEntries();
 	std::vector<TransactionOut> getOutputs();
+	int getNTxin();
+	int getNTxout();
 
 private:
 	std::string id;
 	std::vector<TransactionEntry> entries;
 	std::vector<TransactionOut> outputs;
-
 };
 #endif // TRANS

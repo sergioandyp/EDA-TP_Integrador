@@ -8,6 +8,11 @@
 using namespace std;
 using namespace nlohmann;
 
+Block::Block()
+{
+}
+
+
 Block::Block(const std::string& jsonString) {
 	json fromJSON =  nlohmann::json::parse(jsonString);
 
@@ -20,7 +25,8 @@ Block::Block(const std::string& jsonString) {
 	nonce = fromJSON["nonce"];
 	blockId = fromJSON["blockid"];
 	prevBlockId = fromJSON["previousblockid"];
-	merkleRoot = fromJSON["merkleroot"];
+	merkleRoot = fromJSON["merkleroot"];   
+	height = fromJSON["height"];
 }
 
 
@@ -42,7 +48,7 @@ FullCompleteTree<string> Block::getMerkleTree() {
 		txHashes.push_back(hexCode(generateID((const unsigned char*)id.c_str())));		// Genero ID en HexCodeASCII
 	}
 
-	unsigned int lastRow = merkleTree.getRows() - 1;
+	unsigned int lastRow = merkleTree.getHeight();
 	for (int j = 0; j < merkleTree[lastRow].size(); j++) {		// Agrego los nidstr como hojas
 		if (j < txHashes.size()) {
 			merkleTree[lastRow][j] = txHashes[j];
@@ -92,10 +98,18 @@ string Block::getPrevBlockId(){
 string Block::getMerkleRoot(){
 	return merkleRoot;
 }
-unsigned int Block::getNonce(){
+unsigned int Block::getBlockNonce(){
 	return nonce;
 }
 
-vector<Transaction> Block::getTxs(){
+int Block::getBlockNTx(){
+	return (int)txs.size();
+}
+
+int Block::getBlockHeight(){
+	return height;
+}
+
+vector<Transaction> Block::getBlockTxs(){
 	return txs;
 }

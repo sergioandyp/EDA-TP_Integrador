@@ -9,6 +9,7 @@
 class Block {
 public:
 
+	Block();
 	Block(const std::string& jsonString);
 
 	//std::vector<std::string> getMerklePath(std::string txid);
@@ -16,15 +17,17 @@ public:
 
 	
 	std::string getBlockId();
+	int getBlockHeight();
 	std::string getPrevBlockId();
 	std::string getMerkleRoot();
-	std::vector<Transaction> getTxs();
-	unsigned int getNonce();
-
+	std::vector<Transaction> getBlockTxs();
+	unsigned int getBlockNonce();
+	int getBlockNTx();
 
 private:
 
 	std::vector<Transaction> txs;
+	double height;
 	unsigned int nonce;
 	std::string blockId;
 	std::string prevBlockId;

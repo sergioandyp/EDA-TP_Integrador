@@ -4,25 +4,54 @@
 #include <fstream>
 #include "BlockChain.h"
 #include "FullCompleteTree.h"
+#include "mygui.h"
+
 #define DEBUG
+
 using namespace std;
 
 void printTree(FullCompleteTree<string> tree);
 
 
+#include "Allegro.h"
 int main() {
 
+	Gui gui;
+
+	gui.setup();
+
 	//Cargamos el path
-	std::string path = "blockchain_sample_1.json";
+	string path = "blockchain_sample_0.json";
 
 	//Creamos la blockchain con el json de base.
-	BlockChain chain(path);
+	BlockChain chain;
 
-	for (Block& block : chain.getChain()) {
-		cout << "Bloque " << block.getBlockId() << ":" << endl;
-		printTree(block.getMerkleTree());
-		cout << endl << endl;
+	chain.buildFromPath(path);
+
+	//ALLEGRO_BITMAP* display = al_create_bitmap(DISPLAY_SIZE_X, DISPLAY_SIZE_Y);
+	ALLEGRO_DISPLAY* display = al_create_display(DISPLAY_SIZE_X, DISPLAY_SIZE_Y);
+
+	al_set_target_backbuffer(display);
+
+	drawTree(chain.getChain()[0].getMerkleTree(), DISPLAY_SIZE_X, DISPLAY_SIZE_Y);
+
+
+	cin >> path;
+
+	al_destroy_display(display);
+
+
+
+	while (gui.functions()) {
+
 	}
+
+
+	//for (Block& block : chain.getChain()) {
+	//	cout << "Bloque " << block.getBlockId() << ":" << endl;
+	//	printTree(block.getMerkleTree());
+	//	cout << endl << endl;
+	//}
 
 #ifdef DEBUG
 	//Guardamos el chain en un archivo.
@@ -34,7 +63,7 @@ int main() {
 
 void printTree(FullCompleteTree<string> tree) {
 	
-	for (unsigned int i = 0; i < tree.getRows(); i++) {
+	for (unsigned int i = 0; i <= tree.getHeight(); i++) {
 		for (unsigned int j = 0; j < tree[i].size(); j++) {
 			cout << tree[i][j] << '\t';
 		}

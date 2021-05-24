@@ -1,9 +1,7 @@
 #include "mygui.h"
 
-#include "fileborowser.h"
 #include <allegro5/allegro_image.h>
 #include <vector>
-//#include <Windows.h>
 #include <iostream>
 #include <string>
 
@@ -15,14 +13,13 @@
 using namespace std;
 
 
-
-Gui::Gui() {
+Gui::Gui() : bufPath("blockchain_sample_0.json") {
 
     al_init();
     al_install_keyboard();
     al_install_mouse();
     al_init_primitives_addon();
-    al_set_new_display_flags(ALLEGRO_RESIZABLE);
+    //al_set_new_display_flags(ALLEGRO_RESIZABLE);
     display = al_create_display(WIDTH, HEIGH);
     al_set_window_title(display, "Tree Reader");
     queue = al_create_event_queue();
@@ -87,9 +84,11 @@ string Gui::getpath() {
 }
 
 DisplayState Gui::functions() {
-  
-   // cout << background << endl;
-   // al_clear_to_color(al_map_rgb(100, 100, 100));   //Clearing of the display is made before LCD are written
+
+    al_set_target_backbuffer(display);
+
+    // cout << background << endl;
+    // al_clear_to_color(al_map_rgb(100, 100, 100));   //Clearing of the display is made before LCD are written
     al_draw_bitmap(background, 0, 0, 0);
     ALLEGRO_EVENT ev;
 
@@ -110,14 +109,13 @@ DisplayState Gui::functions() {
     // Start the Dear ImGui frame
     ImGui_ImplAllegro5_NewFrame();
     ImGui::NewFrame();
-    ImGui::FileBrowser fileDialog;
     static bool enabled = false; // For menu options
     static float progress = 0.0f; // For progress bar
 
 
     if (ImGui::BeginMainMenuBar())
     {
-        
+
         if (ImGui::BeginMenu("File"))
         {
             if (ImGui::MenuItem("Open")) {
@@ -125,120 +123,120 @@ DisplayState Gui::functions() {
                 enabled = false;
                 progress = 0.0f;
             }
-            
+
             ImGui::EndMenu();
         }
         ImGui::EndMainMenuBar();
     }
 
-    switch (state){
-        case WAITING:
-            break;
-        case MENU:
-            ImGui::Begin("Menu");
-            progress = 0.0f;
-            if (ImGui::BeginMenu("Calculate Mrarkletree")) {
-                for (int i = 1; i < n+1; i++) {
-                    string temp = "Block " + to_string(i);
-                    if (ImGui::MenuItem(temp.c_str())) {
-                        enabled = true;
-                        state = CALCULATEMERKLE;
-                        curr = i;
-                    }
-                }
-                ImGui::EndMenu();
-              
-            }
-
-            if (ImGui::MenuItem("Draw Tree", (const char*)0, false, enabled))
-            {
-                state = DRAWTREE;
-            }
-            ImGui::End();
-
-            break;
-        case FILESELECT:
-            //static imgui_ext::file_browser_modal fileBrowser("Import");
+    switch (state) {
+    case WAITING:
+        break;
+    case MENU:
+        ImGui::Begin("Menu");
+        progress = 0.0f;
+        if (ImGui::BeginMenu("Calculate Mrarkletree")) {
 
 
-            // (optional) set browser properties
-            //fileDialog.SetTitle("Files");
-            //fileDialog.SetTypeFilters({ ".json"});
-
-            // mainloop
-            // while ()
-            // {
-                //...do other stuff like ImGui::NewFrame();
-
-                //fileDialog.Open();
-                //fileDialog.Display();
-
-                //if (fileDialog.HasSelected())
-                //{
-                //    std::cout << "Selected filename" << fileDialog.GetSelected().string() << std::endl;
-                //    fileDialog.ClearSelected();
-                //    state = MENU;
-                //}
-            ImGui::Begin("File Selector");
-            ImGui::InputText("", bufPath, MAXIMUM_PATH_LENGTH + 1);
-            ImGui::Text(pathtext.c_str());
-            if (ImGui::Button("Done")) {    // Buttons return true when clicked (most widgets return true when edited/activated)
-                path = string(bufPath);
-                if (boost::filesystem::exists(path)) {
-                    state = MENU;
-                    pathtext = "Enter the path";
-                }
-                else {
-                    pathtext = "The path doesn't exist. Please try again.";
+            for (Block& block : chain.getChain()) {
+                string temp;
+                temp = "Block " + to_string(block.getBlockHeight());
+                if (ImGui::MenuItem(temp.c_str())) {
+                    enabled = true;
+                    this->block = block;    // Guardo el bloque
+                    merkleTree = block.getMerkleTree(); // Y el tree completo
+                    validRoot = merkleTree[0][0] == block.getMerkleRoot();
+                    state = CALCULATEMERKLE;
                 }
             }
-            ImGui::End();
+            ImGui::EndMenu();
 
-            //Seteo el vector
-            n = 5;
-            break;
-        case DRAWTREE:
-
-            al_draw_circle(WIDTH / 2-200, HEIGH-200, 50, al_map_rgb(100, 200, 200), 20);
-            al_draw_circle(WIDTH / 2+0, HEIGH-200, 50, al_map_rgb(100, 200, 200), 20);
-            al_draw_circle(WIDTH / 2+200, HEIGH-200, 50, al_map_rgb(100, 200, 200), 20);
-            al_draw_circle(WIDTH / 2+400, HEIGH-200, 50, al_map_rgb(100, 200, 200), 20);
-            al_draw_circle(WIDTH / 2-100, HEIGH-400, 50, al_map_rgb(100, 200, 200), 20);
-            al_draw_circle(WIDTH / 2+300, HEIGH-400, 50, al_map_rgb(100, 200, 200), 20);
-            al_draw_circle(WIDTH / 2+100, HEIGH-500, 50, al_map_rgb(100, 200, 200), 20);
-
-            ImGui::Begin("Menu");
-            if (ImGui::MenuItem("Go back"))
-            {
-                state = MENU;
-                enabled = false;
-            }
-            ImGui::End();
-            break;
-        case CALCULATEMERKLE:
-            //Do sth
-
-            
-            ImGui::Begin("Menu");
-            progress += 0.4f * ImGui::GetIO().DeltaTime;
-            // Typically we would use ImVec2(-1.0f,0.0f) or ImVec2(-FLT_MIN,0.0f) to use all available width,
-            // or ImVec2(width,0.0f) for a specified width. ImVec2(0.0f,0.0f) uses ItemWidth.
-            string temp = "Caluclating Block" + to_string(curr) + "\n";
-            ImGui::Text(temp.c_str());
-            ImGui::ProgressBar(progress, ImVec2(0.0f, 0.0f));
-            ImGui::SameLine(0.0f, ImGui::GetStyle().ItemInnerSpacing.x);
-            ImGui::End();
-            //cout << progress << endl;
-            if (progress >= 1.0f) {
-                state = MENU;
-            }
-
-
-
-
-            
-            break;
         }
+
+        if (ImGui::MenuItem("Draw Tree", (const char*)0, false, enabled))
+        {
+            state = DRAWTREE;
+        }
+        ImGui::End();
+
+        break;
+    case FILESELECT:
+        ImGui::Begin("File Selector");
+        ImGui::InputText("", bufPath, MAXIMUM_PATH_LENGTH + 1);
+        ImGui::Text(pathtext.c_str());
+        if (ImGui::Button("Done")) {    // Buttons return true when clicked (most widgets return true when edited/activated)
+            path = string(bufPath);
+            if (boost::filesystem::exists(path)) {
+                pathtext = "Enter the path";
+                if (!chain.buildFromPath(path))
+                    state = MENU;
+                else
+                    pathtext = "The file does not contain a valid Blockchain";
+            }
+            else
+                pathtext = "The path does not exist. Please try again.";
+        }
+        ImGui::End();
+
+        break;
+    case DRAWTREE:
+
+        al_draw_circle(WIDTH / 2 - 200, HEIGH - 200, 50, al_map_rgb(100, 200, 200), 20);
+        al_draw_circle(WIDTH / 2 + 0, HEIGH - 200, 50, al_map_rgb(100, 200, 200), 20);
+        al_draw_circle(WIDTH / 2 + 200, HEIGH - 200, 50, al_map_rgb(100, 200, 200), 20);
+        al_draw_circle(WIDTH / 2 + 400, HEIGH - 200, 50, al_map_rgb(100, 200, 200), 20);
+        al_draw_circle(WIDTH / 2 - 100, HEIGH - 400, 50, al_map_rgb(100, 200, 200), 20);
+        al_draw_circle(WIDTH / 2 + 300, HEIGH - 400, 50, al_map_rgb(100, 200, 200), 20);
+        al_draw_circle(WIDTH / 2 + 100, HEIGH - 500, 50, al_map_rgb(100, 200, 200), 20);
+
+        ImGui::Begin("Menu");
+        if (validRoot)
+            ImGui::MenuItem("Markle Root is validated", NULL, true);
+        else
+            ImGui::MenuItem("Markle Root does not match", NULL, false);
+        
+        {
+            string temp = "ID: " + block.getBlockId();
+            ImGui::MenuItem(temp.c_str());
+            temp = "Previous Block ID: " + block.getPrevBlockId();
+            ImGui::MenuItem(temp.c_str());
+            temp = "Transaction count: " + to_string(block.getBlockNTx());
+            ImGui::MenuItem(temp.c_str());
+            temp = "Block Number: " + to_string(block.getBlockHeight());
+            ImGui::MenuItem(temp.c_str());
+            temp = "Nonce: " + to_string(block.getBlockNonce());
+            ImGui::MenuItem(temp.c_str());
+            temp = "Merkle Root: " + block.getMerkleRoot();
+            ImGui::MenuItem(temp.c_str());
+        }
+
+        ImGui::MenuItem("");
+        if (ImGui::MenuItem("Go back"))
+        {
+            state = MENU;
+            enabled = false;
+        }
+        ImGui::End();
+        break;
+    case CALCULATEMERKLE:
+        //Do sth
+
+
+        ImGui::Begin("Menu");
+        progress += 0.4f * ImGui::GetIO().DeltaTime;
+        // Typically we would use ImVec2(-1.0f,0.0f) or ImVec2(-FLT_MIN,0.0f) to use all available width,
+        // or ImVec2(width,0.0f) for a specified width. ImVec2(0.0f,0.0f) uses ItemWidth.
+        string temp = "Caluclating Block " + to_string(block.getBlockHeight()) + "\n";
+        ImGui::Text(temp.c_str());
+        ImGui::ProgressBar(progress, ImVec2(0.0f, 0.0f));
+        ImGui::SameLine(0.0f, ImGui::GetStyle().ItemInnerSpacing.x);
+        ImGui::End();
+        //cout << progress << endl;
+        if (progress >= 1.0f)
+            state = MENU;
+
+        break;
+    }
 
     // Rendering
     ImGui::Render();

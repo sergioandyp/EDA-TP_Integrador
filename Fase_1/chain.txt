@@ -5,6 +5,46 @@ Bloque 0
 	merkleRoot: 80EEF9F8
 	Transacción 0
 		Entrie 0
+			blockid:0000084D
+			txid:0000007E
+			signature:00000077
+			outputIndex:2
+		Out 0
+			publicId:91218912199121891218
+			amount:0
+		Out 1
+			publicId:91218912199121891218
+			amount:1
+		Out 2
+			publicId:91218912199121891218
+			amount:2
+		Out 3
+			publicId:91218912199121891218
+			amount:1
+	Transacción 1
+		Entrie 0
+			blockid:00000709
+			txid:000009EB
+			signature:00000A7B
+			outputIndex:4
+		Entrie 1
+			blockid:00000F84
+			txid:000004E5
+			signature:00000D35
+			outputIndex:3
+		Entrie 2
+			blockid:000005D4
+			txid:0000042A
+			signature:00000F92
+			outputIndex:1
+		Out 0
+			publicId:91218912199121891218
+			amount:2
+		Out 1
+			publicId:91218912199121891218
+			amount:2
+	Transacción 2
+		Entrie 0
 			blockid:00000BA8
 			txid:00000B2F
 			signature:00001265
@@ -29,7 +69,7 @@ Bloque 0
 		Out 4
 			publicId:91218912199121891218
 			amount:1
-	Transacción 1
+	Transacción 3
 		Entrie 0
 			blockid:00000EAE
 			txid:00000A4B
@@ -337,6 +377,87 @@ Bloque 4
 			txid:0000086B
 			signature:00000209
 			outputIndex:1
+		Out 0
+			publicId:91218912199121891218
+			amount:0
+	Transacción 1
+		Entrie 0
+			blockid:000003DD
+			txid:0000008E
+			signature:00000544
+			outputIndex:3
+		Entrie 1
+			blockid:00000911
+			txid:000011E0
+			signature:0000065C
+			outputIndex:4
+		Entrie 2
+			blockid:0000035F
+			txid:0000125C
+			signature:000001B5
+			outputIndex:4
+		Entrie 3
+			blockid:0000097C
+			txid:000004BC
+			signature:00000E7C
+			outputIndex:2
+		Entrie 4
+			blockid:00000697
+			txid:00000390
+			signature:00000CE7
+			outputIndex:2
+		Out 0
+			publicId:91218912199121891218
+			amount:1
+		Out 1
+			publicId:91218912199121891218
+			amount:1
+		Out 2
+			publicId:91218912199121891218
+			amount:0
+		Out 3
+			publicId:91218912199121891218
+			amount:1
+		Out 4
+			publicId:91218912199121891218
+			amount:0
+	Transacción 2
+		Entrie 0
+			blockid:00000233
+			txid:000004EF
+			signature:00001138
+			outputIndex:4
+		Entrie 1
+			blockid:00000358
+			txid:000010A7
+			signature:000007A8
+			outputIndex:1
+		Out 0
+			publicId:91218912199121891218
+			amount:0
+		Out 1
+			publicId:91218912199121891218
+			amount:0
+		Out 2
+			publicId:91218912199121891218
+			amount:1
+		Out 3
+			publicId:91218912199121891218
+			amount:1
+		Out 4
+			publicId:91218912199121891218
+			amount:0
+	Transacción 3
+		Entrie 0
+			blockid:000007C2
+			txid:000012DD
+			signature:00001064
+			outputIndex:2
+		Entrie 1
+			blockid:00001000
+			txid:00001057
+			signature:0000084E
+			outputIndex:2
 		Out 0
 			publicId:91218912199121891218
 			amount:0

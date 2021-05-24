@@ -37,8 +37,8 @@ public:
 	}
 
 	// Devuelve la altura total del arbol
-	unsigned int getRows() {
-		return tree.size();
+	unsigned int getHeight() {
+		return height;
 	}
 
 

@@ -139,11 +139,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="..\TP Integrador Fase 1.pdf" />
     <None Include="blockchain_sample_0.json" />
     <None Include="blockchain_sample_1.json" />
     <None Include="imgui\imgui.ini" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Allegro.cpp" />
     <ClCompile Include="Block.cpp" />
     <ClCompile Include="BlockChain.cpp" />
     <ClCompile Include="imgui\imgui.cpp" />
@@ -157,6 +159,7 @@
     <ClCompile Include="Transaction.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Allegro.h" />
     <ClInclude Include="Block.h" />
     <ClInclude Include="BlockChain.h" />
     <ClInclude Include="FullCompleteTree.h" />
