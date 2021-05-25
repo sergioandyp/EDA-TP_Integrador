@@ -4,12 +4,6 @@
 #include <cmath>
 #include <string>
 
-#define DISPLAY_SIZE_Y	720
-#define DISPLAY_SIZE_X	1080
-#define BACKGD_COLOR_R	7
-#define BACKGD_COLOR_G	210
-#define BACKGD_COLOR_B	170
-#define FONT_COLOR		"black"
 
 //
 //class NodeGUI {

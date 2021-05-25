@@ -20,26 +20,36 @@ int main() {
 
 	gui.setup();
 
-	//Cargamos el path
-	string path = "blockchain_sample_0.json";
+	////Cargamos el path
+	//string path = "blockchain_sample_0.json";
 
-	//Creamos la blockchain con el json de base.
-	BlockChain chain;
+	////Creamos la blockchain con el json de base.
+	//BlockChain chain;
 
-	chain.buildFromPath(path);
+	//chain.buildFromPath(path);
 
 	//ALLEGRO_BITMAP* display = al_create_bitmap(DISPLAY_SIZE_X, DISPLAY_SIZE_Y);
-	ALLEGRO_DISPLAY* display = al_create_display(DISPLAY_SIZE_X, DISPLAY_SIZE_Y);
+	////ALLEGRO_DISPLAY* display = al_create_display(DISPLAY_SIZE_X, DISPLAY_SIZE_Y);
 
-	al_set_target_backbuffer(display);
+	////al_set_target_backbuffer(display);
+	//al_set_target_bitmap(display);
 
-	drawTree(chain.getChain()[0].getMerkleTree(), DISPLAY_SIZE_X, DISPLAY_SIZE_Y);
+	//drawTree(chain.getChain()[0].getMerkleTree(), DISPLAY_SIZE_X, DISPLAY_SIZE_Y);
 
 
-	cin >> path;
+	//ALLEGRO_DISPLAY* disp = al_create_display(1080, 720);
 
-	al_destroy_display(display);
+	//al_get_backbuffer(disp);
 
+	//al_draw_bitmap(display, 0, 0, 0);
+
+	//al_flip_display();
+
+
+	//cin >> path;
+
+	//al_destroy_bitmap(display);
+	//al_destroy_display(disp);
 
 
 	while (gui.functions()) {
@@ -55,7 +65,7 @@ int main() {
 
 #ifdef DEBUG
 	//Guardamos el chain en un archivo.
-	chain.saveChain();
+	//chain.saveChain();
 #endif
 
 	return 0;

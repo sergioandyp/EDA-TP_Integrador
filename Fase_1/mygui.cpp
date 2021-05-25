@@ -10,10 +10,18 @@
 #define WIDTH 1024
 #define HEIGH 576
 
+#define BACKGD_COLOR_R	7
+#define BACKGD_COLOR_G	210
+#define BACKGD_COLOR_B	170
+#define FONT_COLOR		"black"
+
+#define HEIGHT_DIV_PERC	0.1
+#define WIDTH_DIV_PERC	0.2
+
+
 using namespace std;
 
-
-Gui::Gui() : bufPath("blockchain_sample_0.json") {
+Gui::Gui() : bufPath("blockchain_sample_0.json"), display(NULL), background(NULL), treeBMP(NULL) {
 
     al_init();
     al_install_keyboard();
@@ -21,6 +29,7 @@ Gui::Gui() : bufPath("blockchain_sample_0.json") {
     al_init_primitives_addon();
     //al_set_new_display_flags(ALLEGRO_RESIZABLE);
     display = al_create_display(WIDTH, HEIGH);
+    treeBMP = al_create_bitmap(WIDTH, HEIGH);
     al_set_window_title(display, "Tree Reader");
     queue = al_create_event_queue();
     al_register_event_source(queue, al_get_display_event_source(display));
@@ -135,7 +144,7 @@ DisplayState Gui::functions() {
     case MENU:
         ImGui::Begin("Menu");
         progress = 0.0f;
-        if (ImGui::BeginMenu("Calculate Mrarkletree")) {
+        if (ImGui::BeginMenu("Select Block")) {
 
 
             for (Block& block : chain.getChain()) {
@@ -156,6 +165,8 @@ DisplayState Gui::functions() {
         if (ImGui::MenuItem("Draw Tree", (const char*)0, false, enabled))
         {
             state = DRAWTREE;
+            drawTreeToBMP(WIDTH, HEIGH);
+
         }
         ImGui::End();
 
@@ -180,15 +191,13 @@ DisplayState Gui::functions() {
 
         break;
     case DRAWTREE:
-
-        al_draw_circle(WIDTH / 2 - 200, HEIGH - 200, 50, al_map_rgb(100, 200, 200), 20);
-        al_draw_circle(WIDTH / 2 + 0, HEIGH - 200, 50, al_map_rgb(100, 200, 200), 20);
-        al_draw_circle(WIDTH / 2 + 200, HEIGH - 200, 50, al_map_rgb(100, 200, 200), 20);
-        al_draw_circle(WIDTH / 2 + 400, HEIGH - 200, 50, al_map_rgb(100, 200, 200), 20);
-        al_draw_circle(WIDTH / 2 - 100, HEIGH - 400, 50, al_map_rgb(100, 200, 200), 20);
-        al_draw_circle(WIDTH / 2 + 300, HEIGH - 400, 50, al_map_rgb(100, 200, 200), 20);
-        al_draw_circle(WIDTH / 2 + 100, HEIGH - 500, 50, al_map_rgb(100, 200, 200), 20);
-
+    {
+        static float c = 60.0;
+        ImGui::Begin("Tree", 0, ImGuiWindowFlags_HorizontalScrollbar);
+        ImGui::DragFloat("Size", &c, 0.2f, 1.0f, 100.0f, "%.0f");
+        ImGui::Image(((void*)treeBMP), ImVec2(WIDTH * c / 100.0, HEIGH * c / 100.0));
+        ImGui::End();
+    }
         ImGui::Begin("Menu");
         if (validRoot)
             ImGui::MenuItem("Markle Root is validated", NULL, true);
@@ -244,4 +253,45 @@ DisplayState Gui::functions() {
     al_flip_display();
 
     return state;
+}
+
+void Gui::drawTreeToBMP(double dispWidth, double dispHeight) {
+
+
+    al_set_target_bitmap(treeBMP);
+
+    al_clear_to_color(al_map_rgba(0,0,0,0));
+
+    unsigned int h = merkleTree.getHeight() + 1;
+
+    for (unsigned int i = 0; i < h; i++) {
+        
+        double bros = exp2(i);
+        double dividerX = dispWidth * WIDTH_DIV_PERC / (double)(bros + 1.0);
+        double dividerY = dispHeight * HEIGHT_DIV_PERC / (double)(h + 1.0);
+        int fontSize = 60 - 12 * i;
+        ALLEGRO_FONT* font = al_load_font("Sans.ttf", fontSize, 0);
+
+        for (unsigned int j = 0; j < merkleTree[i].size(); j++) {
+
+
+            double height = (dispHeight - dividerY * (h + 1.0)) / h;
+            double width = (dispWidth - dividerX * (bros + 1.0)) / bros;
+            double xVert1 = j * (width + dividerX) + dividerX;
+            double yVert1 = i * (height + dividerY) + dividerY;
+            double r = height / 10.0;
+
+            al_draw_filled_rounded_rectangle(xVert1, yVert1, xVert1 + width, yVert1 + height, r, r, al_map_rgb(BACKGD_COLOR_R, BACKGD_COLOR_G, BACKGD_COLOR_B));
+
+            double centerX = xVert1 + width / 2.0;
+            double centerY = yVert1 + height / 2.0;
+
+            al_draw_text(font, al_color_name(FONT_COLOR), centerX, centerY-fontSize/2, ALLEGRO_ALIGN_CENTRE, merkleTree[i][j].c_str());
+
+        }
+        al_destroy_font(font);
+    }
+
+    al_set_target_backbuffer(display);
+
 }

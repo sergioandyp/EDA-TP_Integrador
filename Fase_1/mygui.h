@@ -33,10 +33,12 @@ public:
 
 
 private:
+	void drawTreeToBMP(double dispWidth, double dispHeight);
 
 	ALLEGRO_DISPLAY* display;
 	ALLEGRO_EVENT_QUEUE* queue;
-	ALLEGRO_BITMAP* background = NULL;
+	ALLEGRO_BITMAP* background;
+	ALLEGRO_BITMAP* treeBMP;
 	DisplayState state;
 	
 	char bufPath[MAXIMUM_PATH_LENGTH + 1] = { 0 };
