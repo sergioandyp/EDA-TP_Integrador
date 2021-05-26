@@ -12,19 +12,6 @@ BlockChain::BlockChain()
 {
 }
 
-//BlockChain::BlockChain(const std::string& path) {
-//	// Cargamos el .json y lo formateamos a json
-//	ifstream inputFile = ifstream(path);
-//	json j;
-//	inputFile >> j;
-//	inputFile.close();
-
-//	for (int i = 0; i < j.size(); i++) {
-//		//Creamos y appendeamos bloque por bloque.
-//		chain.push_back( Block(j[i].dump()) );
-//	}
-//}
-
 int BlockChain::buildFromPath(const std::string& path){
 
 	chain.clear();
@@ -50,6 +37,11 @@ int BlockChain::buildFromPath(const std::string& path){
 
 }
 
+/************************************************************************************
+	saveChain: Creamos y guardamos en un archivo, el contenido de la chain
+	una vez parseada por el Json. Util para verificar el correcto funcionamiento
+	del parser.
+************************************************************************************/
 void BlockChain::saveChain() {
 	ofstream file("chain.txt", std::ofstream::out);
 	
