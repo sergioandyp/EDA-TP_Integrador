@@ -7,6 +7,8 @@ using namespace nlohmann;
 
 TransactionEntry::TransactionEntry(const std::string& jsonString) {
 	nlohmann::json fromJSON = nlohmann::json::parse(jsonString);
+
+	//Tomamos la información del JSON 
 	blockId = fromJSON["blockid"];
 	txId = fromJSON["txid"];
 	signature = fromJSON["signature"]; 
@@ -15,14 +17,17 @@ TransactionEntry::TransactionEntry(const std::string& jsonString) {
 
 TransactionOut::TransactionOut(const std::string& jsonString) {
 	nlohmann::json fromJSON = nlohmann::json::parse(jsonString);
+	//Tomamos la información del JSON
 	publicId = fromJSON["publicid"]; 
 	amount = fromJSON["amount"]; 
 }
 
 Transaction::Transaction(const std::string& jsonString) {
 	json fromJSON = nlohmann::json::parse(jsonString);
-
+	
+	//Tomamos la información del JSON
 	id = fromJSON["txid"];
+	
 	// Creamos y appendeamos las entries
 	for (int i = 0; i < fromJSON["vin"].size(); i++) {
 		entries.push_back(TransactionEntry(fromJSON["vin"][i].dump()));

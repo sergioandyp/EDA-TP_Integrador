@@ -16,7 +16,7 @@ private:
 	std::string blockId;
 	std::string txId;
 	std::string signature;
-	double outputId;		//Revisar tipo de dato numerico.
+	double outputId;		
 };
 
 class TransactionOut {
@@ -27,7 +27,7 @@ public:
 
 private:
 	std::string publicId;
-	double amount;			//Revisar tipo de dato numerico. 
+	double amount;			 
 };
 
 class Transaction {
@@ -40,8 +40,8 @@ public:
 	int getNTxout();
 
 private:
-	std::string id;
-	std::vector<TransactionEntry> entries;
-	std::vector<TransactionOut> outputs;
+	std::string id;							// Id de la transacción
+	std::vector<TransactionEntry> entries;	// Vector de transacciones de entradas
+	std::vector<TransactionOut> outputs;	// Vector de transacciones de salidas
 };
 #endif // TRANS

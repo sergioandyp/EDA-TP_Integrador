@@ -16,11 +16,13 @@ Block::Block()
 Block::Block(const std::string& jsonString) {
 	json fromJSON =  nlohmann::json::parse(jsonString);
 
-	//Para cada transacción, creamos la estructura y la appendeamos.
+	//Para cada transacción, creamos la estructura con la 
+	// información cargada y la appendeamos.
 	for (int i = 0; i < fromJSON["tx"].size(); i++) {
 		txs.push_back(Transaction((fromJSON["tx"][i]).dump()));
 	}
 
+	// Cargamos la información del JSON
 	nonce = fromJSON["nonce"];
 	blockId = fromJSON["blockid"];
 	prevBlockId = fromJSON["previousblockid"];
@@ -69,6 +71,7 @@ FullCompleteTree<string> Block::getMerkleTree() {
 	return merkleTree;
 }
 
+// Generador de IDs
 unsigned int Block::generateID(const unsigned char* str) {
 	unsigned int ID = 0;
 	int c;
@@ -78,6 +81,7 @@ unsigned int Block::generateID(const unsigned char* str) {
 	return ID;
 }
 
+// Conversión de decimal a hexadecimal tipo string.
 string Block::hexCode(const unsigned int id) {
 	string output;
 	const char convTable[16] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };

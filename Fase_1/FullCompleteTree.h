@@ -4,11 +4,6 @@
 #include <cmath>
 #include <vector>
 
-// Altura: ceil(log2(leafs))
-// Nodos internos: 2^h-1
-// Nodos totales: 2^h-1+leafs
-// Nodos a altura d (excepto d = heigth): 2^d
-
 // Clase para implementar un arbol binario lleno y completo que se puede
 // acceder a tráves de la altura e índice de un nodo.
 // Se crea a partir del número de hojas, y su tamaño no se puede modificar
