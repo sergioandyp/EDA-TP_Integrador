@@ -11,11 +11,13 @@ BlockChain::BlockChain()
 }
 
 int BlockChain::buildFromPath(const std::string& path){
-
+	
+	// Borramos el contenido que pueda tener la chain de 
+	//cargas anteriores.
 	chain.clear();
 
-	// Cargamos el .json y lo formateamos a json
 	try {
+		// Cargamos el .json y lo formateamos a json
 		ifstream inputFile = ifstream(path);
 		json j;
 		inputFile >> j;

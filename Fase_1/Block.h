@@ -12,10 +12,10 @@ public:
 	Block();
 	Block(const std::string& jsonString);
 
-	//std::vector<std::string> getMerklePath(std::string txid);
+	// Genera el Merkle tree del bloque seleccionado
 	FullCompleteTree<std::string> getMerkleTree();
 
-	
+	// Getters con info de los bloques
 	std::string getBlockId();
 	int getBlockHeight();
 	std::string getPrevBlockId();
@@ -26,7 +26,7 @@ public:
 
 private:
 
-	std::vector<Transaction> txs;
+	std::vector<Transaction> txs;	// Vector de transacciones.
 	double height;
 	unsigned int nonce;
 	std::string blockId;
@@ -36,15 +36,6 @@ private:
 	std::string hexCode(const unsigned int id);
 	unsigned int generateID(const unsigned char* str);
 };
-
-// Todavia no se usa
-// 
-// class Node {
-//
-//private:
-//	std::vector<Block> blocks;
-//};
-
 
 #endif //_BLOCK_H_
 

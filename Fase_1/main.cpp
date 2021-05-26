@@ -1,7 +1,5 @@
 #include "mygui.h"
 
-//#define DEBUG
-
 using namespace std;
 
 int main() {

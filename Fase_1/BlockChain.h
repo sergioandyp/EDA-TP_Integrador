@@ -8,8 +8,10 @@
 class BlockChain {
 public:
 	BlockChain();
-	// BlockChain(const std::string& path);
-	int buildFromPath(const std::string& path);
+
+	//Constructor de la Chain en base al path del .json
+	int buildFromPath(const std::string& path); 
+
 	void saveChain();	//Guarda la Chain en "chain.txt"
 	std::vector<Block> getChain();
 
