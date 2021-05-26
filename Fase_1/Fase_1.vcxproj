@@ -145,7 +145,6 @@
     <None Include="imgui\imgui.ini" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Allegro.cpp" />
     <ClCompile Include="Block.cpp" />
     <ClCompile Include="BlockChain.cpp" />
     <ClCompile Include="imgui\imgui.cpp" />
@@ -159,7 +158,6 @@
     <ClCompile Include="Transaction.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Allegro.h" />
     <ClInclude Include="Block.h" />
     <ClInclude Include="BlockChain.h" />
     <ClInclude Include="FullCompleteTree.h" />

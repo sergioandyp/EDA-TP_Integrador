@@ -1,17 +1,9 @@
 #pragma once
 
 #include <allegro5/allegro.h>
-#include <allegro5/allegro_primitives.h>
-#include <allegro5/allegro_font.h>
-#include <allegro5/allegro_ttf.h>
-#include <allegro5/allegro_color.h>
-#include <allegro5/allegro_image.h>
 
-#include "imgui/imgui.h"
-#include "imgui/imgui_impl_allegro5.h"
 #include "BlockChain.h"
 #include <string>
-#include <vector>
 
 #define MAXIMUM_PATH_LENGTH 100
 
@@ -41,7 +33,7 @@ private:
 	ALLEGRO_BITMAP* treeBMP;
 	DisplayState state;
 	
-	char bufPath[MAXIMUM_PATH_LENGTH + 1] = { 0 };
+	char bufPath[MAXIMUM_PATH_LENGTH + 1];
 	std::string path;
 	Block block;
 	std::string pathtext;

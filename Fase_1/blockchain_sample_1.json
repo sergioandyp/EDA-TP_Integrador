@@ -91,33 +91,10 @@
         "blockid": "944EC375",
         "height": 1,
         "merkleroot": "62F34A8A",
-        "nTx": 4,
+        "nTx": 3,
         "nonce": 6596,
         "previousblockid": "13878957",
         "tx": [
-            {
-                "nTxin": 1,
-                "nTxout": 2,
-                "txid": "74969E94",
-                "vin": [
-                    {
-                        "blockid": "00000239",
-                        "outputIndex": 3,
-                        "signature": "000005FE",
-                        "txid": "0000078E"
-                    }
-                ],
-                "vout": [
-                    {
-                        "amount": 1,
-                        "publicid": "91218912199121891218"
-                    },
-                    {
-                        "amount": 1,
-                        "publicid": "91218912199121891218"
-                    }
-                ]
-            },
             {
                 "nTxin": 5,
                 "nTxout": 1,

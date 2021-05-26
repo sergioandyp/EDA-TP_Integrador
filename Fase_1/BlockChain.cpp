@@ -1,6 +1,4 @@
 #include "BlockChain.h"
-#include "Block.h"
-#include "Transaction.h"
 #include <iostream>
 #include <fstream>      
 #include "nlohmann/json.hpp"

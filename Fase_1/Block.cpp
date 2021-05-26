@@ -18,7 +18,6 @@ Block::Block(const std::string& jsonString) {
 
 	//Para cada transacción, creamos la estructura y la appendeamos.
 	for (int i = 0; i < fromJSON["tx"].size(); i++) {
-		//string aux = 
 		txs.push_back(Transaction((fromJSON["tx"][i]).dump()));
 	}
 

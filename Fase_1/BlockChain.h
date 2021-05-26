@@ -1,9 +1,9 @@
 #ifndef CHAIN
 #define CHAIN
 
+#include "Block.h"
 #include <vector>
 #include <string>
-#include "Block.h"
 
 class BlockChain {
 public:

@@ -1,11 +1,18 @@
 #include "mygui.h"
 
+#include <allegro5/allegro_primitives.h>
+#include <allegro5/allegro_font.h>
+#include <allegro5/allegro_ttf.h>
+#include <allegro5/allegro_color.h>
 #include <allegro5/allegro_image.h>
-#include <vector>
-#include <iostream>
-#include <string>
 
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_allegro5.h"
+
+#include <vector>
 #include <boost/filesystem.hpp>
+#include <iostream>
+
 
 #define WIDTH 1024
 #define HEIGH 576
@@ -54,10 +61,10 @@ Gui::Gui() : bufPath("blockchain_sample_0.json"), display(NULL), background(NULL
 }
 
 Gui::~Gui() {
-
     ImGui_ImplAllegro5_Shutdown();
     ImGui::DestroyContext();
     al_destroy_event_queue(queue);
+    al_destroy_bitmap(treeBMP);
     al_destroy_bitmap(background);
     al_destroy_display(display);
 }
@@ -96,8 +103,6 @@ DisplayState Gui::functions() {
 
     al_set_target_backbuffer(display);
 
-    // cout << background << endl;
-    // al_clear_to_color(al_map_rgb(100, 100, 100));   //Clearing of the display is made before LCD are written
     al_draw_bitmap(background, 0, 0, 0);
     ALLEGRO_EVENT ev;
 
@@ -240,7 +245,11 @@ DisplayState Gui::functions() {
         ImGui::ProgressBar(progress, ImVec2(0.0f, 0.0f));
         ImGui::SameLine(0.0f, ImGui::GetStyle().ItemInnerSpacing.x);
         ImGui::End();
-        //cout << progress << endl;
+
+#ifdef DEBUG
+        cout << progress << endl;
+#endif
+
         if (progress >= 1.0f)
             state = MENU;
 
@@ -256,7 +265,6 @@ DisplayState Gui::functions() {
 }
 
 void Gui::drawTreeToBMP(double dispWidth, double dispHeight) {
-
 
     al_set_target_bitmap(treeBMP);
 

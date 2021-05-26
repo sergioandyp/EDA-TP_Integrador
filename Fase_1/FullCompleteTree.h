@@ -4,9 +4,9 @@
 #include <cmath>
 #include <vector>
 
-// Altura: ceil(log2(n))
-// Nodos totales: 2^ceil(log_2(n))-1+n
-// Nodos internos: 2^ceil(log_2(n))-1
+// Altura: ceil(log2(leafs))
+// Nodos internos: 2^h-1
+// Nodos totales: 2^h-1+leafs
 // Nodos a altura d (excepto d = heigth): 2^d
 
 // Clase para implementar un arbol binario lleno y completo que se puede
