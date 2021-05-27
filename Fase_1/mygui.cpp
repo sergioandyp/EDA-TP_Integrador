@@ -294,7 +294,7 @@ void Gui::drawTreeToBMP(double dispWidth, double dispHeight) {      //Dibujo del
             double centerX = xVert1 + width / 2.0;
             double centerY = yVert1 + height / 2.0;
 
-            al_draw_text(font, al_color_name(FONT_COLOR), centerX, centerY-fontSize/2, ALLEGRO_ALIGN_CENTRE, merkleTree[i][j].c_str());
+            al_draw_text(font, al_color_name(FONT_COLOR), centerX, centerY-3*fontSize/4.0, ALLEGRO_ALIGN_CENTRE, merkleTree[i][j].c_str());
 
         }
         al_destroy_font(font);
