@@ -1,11 +1,14 @@
 #pragma once
 
 #include "Node.h"
+#include "HTTPServer.h"
 
 class SPVNode : public Node {
 public:
 
-private:
+	virtual std::vector<Action> getActions();
 
+private:
+	HTTPServer server;
 
 };

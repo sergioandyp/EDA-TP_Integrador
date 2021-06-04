@@ -7,6 +7,6 @@
 class Node {
 public:
 
-	//std::vector<Action> getActions() = 0;
+	virtual std::vector<Action> getActions() = 0;
 
 };
