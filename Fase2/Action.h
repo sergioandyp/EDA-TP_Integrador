@@ -5,18 +5,20 @@
 
 enum ACTION_ID { SEND_TRANS, };
 
-class Actions {
+class Action {
 public:
 
 
 
 private:
 	ACTION_ID id;
-	std::string desc; "Enviar transaccion"
+	std::string desc;
 	std::vector<std::string> params;
-	void (*func) (std:vector<string>& params);
+	//void (*func) (std:vector<string>& params);
 };
 
+
+/*
 params:
 
 {
@@ -42,3 +44,4 @@ for (params : action) {
 	if 
 
 }
+*/

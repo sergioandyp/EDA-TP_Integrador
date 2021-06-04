@@ -2,16 +2,10 @@
 
 #include "Node.h"
 
-class FullNode : public Node
-{
+class FullNode : public Node {
 
 public:
 
 private:
     std::vector<std::string> actions;
 };
-
-if (accion)
-
-
- if (button1)

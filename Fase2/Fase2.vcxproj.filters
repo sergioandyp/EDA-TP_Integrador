@@ -65,6 +65,12 @@
     <ClCompile Include="FullNode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="HTTPServer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HTTPClient.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Block.h">
@@ -112,10 +118,16 @@
     <ClInclude Include="SPVNode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Actions.h">
+    <ClInclude Include="Action.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="FullNode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HTTPServer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HTTPClient.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
