@@ -4,7 +4,7 @@
 #include "Block.h"
 #include "HTTPServer.h"
 #include <map>
-
+#include <nlohmann/json.hpp>
 
 
 class FullNode : public Node {
@@ -31,8 +31,6 @@ private:
     HTTPServer server;
 
     void handleRequest(std::string request);
-    void sendResponse(bool status);
-    //void sendResponse(bool status, std::string result);
-
+    void sendResponse(bool status, nlohmann::json result);
 
 };

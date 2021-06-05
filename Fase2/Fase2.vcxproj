@@ -153,6 +153,7 @@
     <ClCompile Include="BlockChain.cpp" />
     <ClCompile Include="EDACoinNetwork.cpp" />
     <ClCompile Include="FullNode.cpp" />
+    <ClCompile Include="HTTPClient.cpp" />
     <ClCompile Include="HTTPServer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mygui.cpp" />

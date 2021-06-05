@@ -5,6 +5,7 @@
 using namespace std;
 
 void testServer();
+void testClient();
 
 int main() {
 
@@ -16,7 +17,8 @@ int main() {
 		//EDACoinNetwork.updateNodes();
 	}
 
-	testServer();
+	//testServer();
+	//testClient();
 
 	return 0;
 }
@@ -38,4 +40,18 @@ void testServer() {
 
 	}
 
+}
+
+
+#include "HTTPClient.h"
+void testClient() {
+	HTTPClient clientecito(8080);
+	clientecito.getRequest("127.0.0.1", "Vamo colon pibeh", 80);
+	while (clientecito.isBusy())
+	{
+		clientecito.clientRun();
+		cout << clientecito.isBusy() << endl;
+	}
+
+	cout << "RTA: " << clientecito.getContent()<<endl;
 }

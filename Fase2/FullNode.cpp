@@ -1,5 +1,4 @@
 #include "FullNode.h"
-#include <nlohmann/json.hpp>
 
 using namespace std;
 using namespace nlohmann;
@@ -78,36 +77,41 @@ void FullNode::handleRequest(string request) {
 		/*
 			INTERPRETAR REQUEST
 		*/
-		sendResponse(true);
+		json result = NULL;
+		sendResponse(true, result);
 	}
 	else if (path.find("send_tx") != path.npos) {
 		/*
 			INTERPRETAR REQUEST
 		*/
-		sendResponse(true);
+		json result = NULL;
+		sendResponse(true, result);
 	}
 	else if (path.find("send_filter") != path.npos) {
 		/*
 			INTERPRETAR REQUEST
 		*/
-		sendResponse(true);
+		json result = NULL;
+		sendResponse(true, result);
 	}
 	else if (path.find("get_blocks") != path.npos) {
 		/*
 			INTERPRETAR REQUEST
 		*/
-		sendResponse(true);
+		json result = NULL;
+		sendResponse(true, result);
 	}
 	else if (path.find("get_block_header") != path.npos) {
 		/*
 			INTERPRETAR REQUEST
 		*/
-		sendResponse(true);
+		json result = NULL;
+		sendResponse(true, result);
 	}
 
 }
 
-void FullNode::sendResponse(bool status) {
+void FullNode::sendResponse(bool status, json result) {
 
 	json response;
 

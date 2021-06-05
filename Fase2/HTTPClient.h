@@ -8,15 +8,23 @@ class HTTPClient {
 
 public:
 
-    HTTPClient();
-    int clientSetUp(std::string url);
-    int perform();
-    void cleanUp();
+    HTTPClient(unsigned int port);
+    int clientRun();
+    std::string getContent();
+    int postRequest(std::string url, std::string msg, unsigned int port);
+    int getRequest(std::string url, std::string msg, unsigned int port);
+    int isBusy();
+
 
 private:
-    CURL* curl;
+    CURL* handle;
     CURLM* multiHandle;
-    std::string response;
+    std::string content;
+    std::string header;
     std::string request;
-    bool requesting;
+    int busy; // Tiene que ser int para poder usarla en curl.
+    unsigned int port;
+    
+    
+    void clientCleanUp();
 };

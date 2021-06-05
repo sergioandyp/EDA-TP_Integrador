@@ -4,6 +4,7 @@
 #include "HTTPServer.h"
 #include "Block.h"
 #include <vector>
+#include <nlohmann/json.hpp>
 
 class SPVNode : public Node {
 public:
@@ -26,5 +27,7 @@ private:
 	std::vector<BlockHeader> blocks;
 	HTTPServer server;
 
+	void handleRequest(std::string request);
+	void sendResponse(bool status, nlohmann::json result);
 
 };
