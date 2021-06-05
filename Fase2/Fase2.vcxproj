@@ -148,11 +148,11 @@
     <ClCompile Include="..\imgui\imgui_impl_allegro5.cpp" />
     <ClCompile Include="..\imgui\imgui_tables.cpp" />
     <ClCompile Include="..\imgui\imgui_widgets.cpp" />
-    <ClCompile Include="Actions.cpp" />
+    <ClCompile Include="Action.cpp" />
     <ClCompile Include="Block.cpp" />
     <ClCompile Include="BlockChain.cpp" />
+    <ClCompile Include="EDACoinNetwork.cpp" />
     <ClCompile Include="FullNode.cpp" />
-    <ClCompile Include="HTTPClient.cpp" />
     <ClCompile Include="HTTPServer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mygui.cpp" />

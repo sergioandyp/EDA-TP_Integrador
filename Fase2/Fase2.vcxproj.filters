@@ -59,7 +59,7 @@
     <ClCompile Include="SPVNode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Actions.cpp">
+    <ClCompile Include="Action.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="FullNode.cpp">
@@ -68,7 +68,7 @@
     <ClCompile Include="HTTPServer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="HTTPClient.cpp">
+    <ClCompile Include="EDACoinNetwork.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

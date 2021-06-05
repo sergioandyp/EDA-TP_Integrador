@@ -15,7 +15,8 @@ HTTPServer::HTTPServer(unsigned short port) :
 				acceptor(io_context, tcp::endpoint(tcp::v4(), port)),
 				socket(io_context),				// Inicializa socket sin abrirlo
 				buff(),
-				request()
+				request(),
+				response()
 {
 }
 
@@ -55,16 +56,19 @@ bool HTTPServer::isRequest() {
 
 string HTTPServer::getRequest() {
 	string temp = request;
-	request.empty();
+	request.clear();
 	return temp;
 }
 
-void HTTPServer::sendResponse(std::string response) {
+void HTTPServer::sendResponse(std::string response_) {
+	
+	response = response_;
 
 #ifdef DEBUG
 	cout << "Sending response" << endl;
 	cout << "Response:" << endl << response << endl << endl;
 #endif
+
 
 	boost::asio::async_write(socket, boost::asio::buffer(response),
 		boost::bind(&HTTPServer::messageSentCb, this,

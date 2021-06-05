@@ -2,13 +2,29 @@
 
 #include "Node.h"
 #include "HTTPServer.h"
+#include "Block.h"
+#include <vector>
 
 class SPVNode : public Node {
 public:
 
-	virtual std::vector<Action> getActions();
+	SPVNode(unsigned int serverPort);
+
+	virtual void update();
+
+	bool start();
+	
+	// Accion a realizar a traves del ID, parametros opcionales
+	virtual bool doAction(ACTION_ID actionID, std::map<std::string, std::string> params = std::map<std::string, std::string>());
+
+	virtual std::vector<ACTION_ID> getSendActions();
+
+	virtual std::vector<ACTION_ID> getReceiveActions();
 
 private:
+	
+	std::vector<BlockHeader> blocks;
 	HTTPServer server;
+
 
 };

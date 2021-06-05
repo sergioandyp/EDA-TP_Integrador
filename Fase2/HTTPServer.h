@@ -11,7 +11,7 @@ public:
 
 	bool start();
 
-	// Se debe llamar xontinuamente para que el server pueda funcionar
+	// Se debe llamar continuamente para que el server pueda funcionar
 	void run();
 
 	bool isRequest();
@@ -42,6 +42,7 @@ private:
 	boost::asio::streambuf buff;
 
 	std::string request;
+	std::string response;
 
 };
 

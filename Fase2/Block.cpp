@@ -23,11 +23,11 @@ Block::Block(const std::string& jsonString) {
 	}
 
 	// Cargamos la información del JSON
-	nonce = fromJSON["nonce"];
-	blockId = fromJSON["blockid"];
-	prevBlockId = fromJSON["previousblockid"];
-	merkleRoot = fromJSON["merkleroot"];   
-	height = fromJSON["height"];
+	header.nonce = fromJSON["nonce"];
+	header.blockId = fromJSON["blockid"];
+	header.prevBlockId = fromJSON["previousblockid"];
+	header.merkleRoot = fromJSON["merkleroot"];
+	header.height = fromJSON["height"];
 }
 
 
@@ -93,16 +93,16 @@ string Block::hexCode(const unsigned int id) {
 }
 
 string Block::getBlockId(){
-	return blockId;
+	return header.blockId;
 }
 string Block::getPrevBlockId(){
-	return prevBlockId;
+	return header.prevBlockId;
 }
 string Block::getMerkleRoot(){
-	return merkleRoot;
+	return header.merkleRoot;
 }
 unsigned int Block::getBlockNonce(){
-	return nonce;
+	return header.nonce;
 }
 
 int Block::getBlockNTx(){
@@ -110,7 +110,7 @@ int Block::getBlockNTx(){
 }
 
 int Block::getBlockHeight(){
-	return height;
+	return header.height;
 }
 
 vector<Transaction> Block::getBlockTxs(){

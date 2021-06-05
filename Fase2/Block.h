@@ -6,6 +6,16 @@
 #include "FullCompleteTree.h"
 #include "Transaction.h"
 
+class BlockHeader {
+public:
+	double height;
+	unsigned int nonce;
+	std::string blockId;
+	std::string prevBlockId;
+	std::string merkleRoot;
+};
+
+
 class Block {
 public:
 
@@ -26,12 +36,9 @@ public:
 
 private:
 
+	BlockHeader header;
+
 	std::vector<Transaction> txs;	// Vector de transacciones.
-	double height;
-	unsigned int nonce;
-	std::string blockId;
-	std::string prevBlockId;
-	std::string merkleRoot;
 
 	std::string hexCode(const unsigned int id);
 	unsigned int generateID(const unsigned char* str);

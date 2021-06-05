@@ -27,17 +27,15 @@ void testServer() {
 		cout << "No se pudo iniciar el server" << endl;
 	}
 
-	while (!server.isRequest()) {
-		server.run();
-	}
-
-	cout << "Respuesta recibida: " << server.getRequest() << endl;
-
-	server.sendResponse("Hola, gracias por conectarte\r\n\r\n");
-
-
 	while (true) {
-		server.run();
+		while (!server.isRequest()) {
+			server.run();
+		}
+
+		cout << "Respuesta recibida: " << server.getRequest() << endl;
+
+		server.sendResponse("Hola, gracias por conectarte\r\n\r\n");
+
 	}
 
 }
