@@ -46,7 +46,7 @@ void testServer() {
 #include "HTTPClient.h"
 void testClient() {
 	HTTPClient clientecito(8080);
-	clientecito.getRequest("google.com", "Vamo colon pibeh", 80);
+	clientecito.getRequest("127.0.0.1", 80);
 	while (clientecito.isBusy())
 	{
 		clientecito.clientRun();

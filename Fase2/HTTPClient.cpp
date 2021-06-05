@@ -35,8 +35,7 @@ int HTTPClient::postRequest(std::string url, std::string msg, unsigned int port)
     return 1;
 }
 
-int HTTPClient::getRequest(std::string url, std::string msg, unsigned int port) {
-    request = msg;
+int HTTPClient::getRequest(std::string url, unsigned int port) {
     content = "";
     header = "";
     handle = curl_easy_init();
@@ -52,8 +51,6 @@ int HTTPClient::getRequest(std::string url, std::string msg, unsigned int port) 
     curl_easy_setopt(handle, CURLOPT_PROTOCOLS, CURLPROTO_HTTP | CURLPROTO_HTTPS);
     curl_easy_setopt(handle, CURLOPT_WRITEFUNCTION, getData);
     curl_easy_setopt(handle, CURLOPT_WRITEDATA, &content);
-    curl_easy_setopt(handle, CURLOPT_POSTFIELDS, msg.c_str());
-    curl_easy_setopt(handle, CURLOPT_POSTFIELDSIZE, (long)(msg.length()));
     curl_easy_setopt(handle, CURLOPT_HEADERFUNCTION, getHeader);
     curl_easy_setopt(handle, CURLOPT_HEADERDATA, &header);
     curl_multi_add_handle(multiHandle, handle);

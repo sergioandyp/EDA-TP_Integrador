@@ -12,7 +12,7 @@ public:
     int clientRun();
     std::string getContent();
     int postRequest(std::string url, std::string msg, unsigned int port);
-    int getRequest(std::string url, std::string msg, unsigned int port);
+    int getRequest(std::string url, unsigned int port);
     int isBusy();
 
 
