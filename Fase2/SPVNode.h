@@ -10,9 +10,9 @@ public:
 
 	SPVNode(unsigned int serverPort);
 
-	virtual void update();
-
 	bool start();
+
+	virtual void update();
 	
 	// Accion a realizar a traves del ID, parametros opcionales
 	virtual bool doAction(ACTION_ID actionID, std::map<std::string, std::string> params = std::map<std::string, std::string>());

@@ -30,5 +30,9 @@ private:
     std::vector<Block> blocks;
     HTTPServer server;
 
+    void handleRequest(std::string request);
+    void sendResponse(bool status);
+    //void sendResponse(bool status, std::string result);
+
 
 };
