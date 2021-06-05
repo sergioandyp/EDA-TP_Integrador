@@ -3,9 +3,8 @@
 using namespace std;
 using namespace nlohmann;
 
-SPVNode::SPVNode(unsigned int serverPort) : server(serverPort) {
-
-
+SPVNode::SPVNode(unsigned int serverPort) : server(serverPort) 
+{
 }
 
 bool SPVNode::start() {

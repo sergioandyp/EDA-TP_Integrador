@@ -148,7 +148,7 @@ struct ExampleAppLog
     }
 };
 
-Gui::Gui() : bufPath("blockchain_sample_0.json"), display(NULL), background(NULL), treeBMP(NULL) {
+Gui::Gui() : bufPath("blockchain_sample_0.json"), display(NULL), background(NULL), treeBMP(NULL), node1(1), node2(2){
 
     al_init();
     al_install_keyboard();

@@ -2,6 +2,7 @@
 
 #include "BlockChain.h"
 #include <vector>
+#include <map>
 
 enum ACTION_ID { BLOCK, TRANSACTION, MERKLE_BLOCK, FILTER, GET_BLOCK_HEADER, GET_BLOCKS };
 
@@ -16,6 +17,6 @@ public:
 
 	virtual void update() = 0;
 
-	virtual ~Node() = 0;
+	virtual ~Node() {}
 
 };

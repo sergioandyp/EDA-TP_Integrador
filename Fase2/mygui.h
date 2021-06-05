@@ -4,7 +4,7 @@
 
 #include "BlockChain.h"
 #include <string>
-#include "Node.h"
+#include "FullNode.h"
 
 #define MAXIMUM_PATH_LENGTH 100
 #define MAXIMUM_KEY_LENGTH 20
@@ -57,8 +57,8 @@ private:
 	BlockChain chain;
 	FullCompleteTree<std::string> merkleTree;
 	bool validRoot;
-	Node node1;
-	Node node2;
+	FullNode node1;
+	FullNode node2;
 
 };
 

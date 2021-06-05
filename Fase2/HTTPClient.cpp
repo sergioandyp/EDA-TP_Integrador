@@ -25,11 +25,11 @@ int HTTPClient::postRequest(std::string url, std::string msg, unsigned int port)
     curl_easy_setopt(handle, CURLOPT_URL, url.c_str());
     curl_easy_setopt(handle, CURLOPT_PORT, (long)port);
     curl_easy_setopt(handle, CURLOPT_FOLLOWLOCATION, 1L); //Follow HTTP redirects
+    curl_easy_setopt(handle, CURLOPT_WRITEFUNCTION, getData);
+    curl_easy_setopt(handle, CURLOPT_WRITEDATA, &content);
     curl_easy_setopt(handle, CURLOPT_PROTOCOLS, CURLPROTO_HTTP | CURLPROTO_HTTPS);
     curl_easy_setopt(handle, CURLOPT_POSTFIELDS, msg.c_str());
     curl_easy_setopt(handle, CURLOPT_POSTFIELDSIZE, (long)(msg.length()));
-    curl_easy_setopt(handle, CURLOPT_WRITEDATA, &content);
-    curl_easy_setopt(handle, CURLOPT_WRITEFUNCTION, getData);
     curl_multi_add_handle(multiHandle, handle);
     curl_multi_perform(multiHandle, &busy);
     return 1;
