@@ -26,6 +26,10 @@
 #define WIDTH_DIV_PERC	0.2
 
 #define MAXPORT 65535
+
+enum Nodetype {FULL=0, SPV};
+enum Localhost { LOCAL = 0, NOLOCAL };
+
 using namespace std;
 
 struct ExampleAppLog
@@ -148,7 +152,7 @@ struct ExampleAppLog
     }
 };
 
-Gui::Gui() : bufPath("blockchain_sample_0.json"), display(NULL), background(NULL), treeBMP(NULL), node1(1), node2(2){
+Gui::Gui(EDACoinNetwork & network) : myNetwork(network), bufPath("blockchain_sample_0.json"), display(NULL), background(NULL), treeBMP(NULL) {
 
     al_init();
     al_install_keyboard();
@@ -249,6 +253,7 @@ DisplayMode Gui::functions() {
     static bool enablesendbtn = false; // For TCP sending message
     static bool enabletransactions = false; // For TCP transactions
     static float progress = 0.0f; // For progress bar
+    static int node_type = false;  // Type of node to initialize
     
     static ExampleAppLog my_log;
     my_log.Draw("log");
@@ -272,12 +277,12 @@ DisplayMode Gui::functions() {
         {
             if (ImGui::BeginMenu("Create")) {
                 if (ImGui::MenuItem("Full")) {
-                    //Guardo el tipo de nodo....
+                    node_type = FULL;
                     state = CREATE;
                     mode = NODE;
                 }
                 if (ImGui::MenuItem("SPV")) {
-                    //Guardo el tipo de nodo....
+                    node_type = SPV;
                     state = CREATE;
                     mode = NODE;
                 }
@@ -288,17 +293,21 @@ DisplayMode Gui::functions() {
                 mode = NODE;
             }
             if (ImGui::BeginMenu("Connect")) {
-                for (int i = 0; i < 3; i++) {
-                    string temp = ("Client" + to_string(i));
+                ImGui::MenuItem("Select Client");
+                for (int i = 0; i < myNetwork.getNodes().size(); i++) {                   // Para cada nodo
+                    ImGui::MenuItem("Select Server");
+                    string temp = ("IP: " + myNetwork.getNodes()[i]->getIP() +" Port: " + to_string(myNetwork.getNodes()[i]->getServerPort()));
                     if (ImGui::BeginMenu(temp.c_str())) {
-                        for (int j = 0; j < 5; j++) {
-                            temp = ("Server" + to_string(j));
+                        for (int j = 0; j < myNetwork.getNodes()[i]->getNeighbors().size(); j++) {                                      // Todos sus vecinos
+                            temp = ("IP: " + myNetwork.getNodes()[i]->getNeighbors()[j]->getIP() +" Port: " + to_string(myNetwork.getNodes()[i]->getNeighbors()[j]->getClientPort()));
                             if (ImGui::MenuItem(temp.c_str())) {
                                 mode = NODE;
                                 state = SEND;
                                 enablesendbtn = false;
                                 enabletransactions = false;
-                                my_log.AddLog("A TCP connection between %d and %d was stablished\n", i, j);
+                                node1 = (myNetwork.getNodes()[i]);
+                                node2 = (myNetwork.getNodes()[i]->getNeighbors()[j]);
+                                my_log.AddLog("A TCP connection between node IP: %s PORT: %d and IP: %s PORT: %d was stablished\n", myNetwork.getNodes()[i]->getIP(), myNetwork.getNodes()[i]->getServerPort(), myNetwork.getNodes()[i]->getNeighbors()[j]->getIP(), myNetwork.getNodes()[i]->getNeighbors()[j]->getClientPort());
                             }
                         }
                         ImGui::EndMenu();
@@ -435,60 +444,113 @@ DisplayMode Gui::functions() {
                     cout << port1 << endl;
                     my_log.AddLog("A new local node was created - Port: %d\n", port1);
                     mode = WAITING;
+                    if (node_type == FULL)
+                        myNetwork.createFull(port1);
+                    else if (node_type == SPV)
+                        myNetwork.createSPV(port1);
                 }
             }
             ImGui::End();
             break;
+
         case LINK:
             ImGui::Begin("Neighbor Selector");
             ImGui::InputInt("Port1", &port1, 1, 100);
-            IPinput(octets1, "IP1");
+            IPinput(octets1, "IP1", LOCAL);
             ImGui::InputInt("Port2", &port2, 1, 100);
-            IPinput(octets2, "IP2");
+            IPinput(octets2, "IP2", LOCAL); 
             
-            
-            if (ImGui::Button("Link")) {    // Buttons return true when clicked (most widgets return true when edited/activated)
+            if (ImGui::Button("Link")) {    
                 if (port1 < MAXPORT) {
+#ifdef DEBUG
                     cout << port1 << endl;
                     cout << octets1[0] << "." << octets1[1] << "." << octets1[2] << "." << octets1[3]<<endl;
                     cout << port2 << endl;
                     cout << octets2[0] << "." << octets2[1] << "." << octets2[2] << "." << octets2[3]<<endl;
-                    mode = WAITING;
-                    my_log.AddLog("The node %d.%d.%d.%d: port %d was connected with the node %d.%d.%d.%d: port %d\n", octets1[0], octets1[1], octets1[2], octets1[3], port1, octets2[0], octets2[1], octets2[2], octets2[3], port2);
+#endif
+                    if (myNetwork.makeConnection(port1, port2)) {     // Si la conexión fue exitosa
+                        mode = WAITING;
+                        my_log.AddLog("The node %d.%d.%d.%d: port %d was connected with the node %d.%d.%d.%d: port %d\n", octets1[0], octets1[1], octets1[2], octets1[3], port1, octets2[0], octets2[1], octets2[2], octets2[3], port2);
+
+                    }
+                    else
+                        my_log.AddLog("The connection between the node %d.%d.%d.%d: port %d and the node %d.%d.%d.%d: port %d failed\n", octets1[0], octets1[1], octets1[2], octets1[3], port1, octets2[0], octets2[1], octets2[2], octets2[3], port2);
                 }
             }
             ImGui::End();
             break;
+
         case SEND:
-            for(const auto& x: node1.getSendActions()) {
-                for(const auto& y: node2.getReceiveActions()){
-                    if (y==x){
-                        //Do sth....
-                    }
-                }
-            }
-            // sizeof(ACTION_ID)/sizeof(int)
+            ACTION_ID action;
+            map<string, string> params;
             ImGui::Begin("Connect");
             if (ImGui::BeginMenu("Select message type")) {
-                for (int j = 0; j < 3; j++) {
-                    string temp = ("Message" + to_string(j));
-                    if (ImGui::MenuItem(temp.c_str())) {
-                        enablesendbtn = true;
-                        if (j == 3) {
-                            enabletransactions = true;
+                for(const ACTION_ID& x: myNetwork.getActionsBetween(node1, node2)) {
+                    switch (x)
+                    {
+                    case BLOCK:
+                        if (ImGui::MenuItem("Send Block")) {
+                                enablesendbtn = true;
+                                enabletransactions = false;
+                                action = BLOCK;
                         }
+                        break;
+                    case TRANSACTION:
+                        if (ImGui::MenuItem("Send Transaction")) {
+                                enablesendbtn = true;
+                                enabletransactions = true;
+                                action = TRANSACTION;
+                        }
+                        break;
+                    case MERKLE_BLOCK:
+                        if (ImGui::MenuItem("Send Merkle Block")) {
+                                enablesendbtn = true;
+                                enabletransactions = false;
+                                action = MERKLE_BLOCK;
+                        }
+                        break;
+                    case FILTER:
+                        if (ImGui::MenuItem("Filter")) {
+                                enablesendbtn = true;
+                                enabletransactions = false;
+                                action = BLOCK;
+                        }
+                        break;
+                    case GET_BLOCK_HEADER:
+                    if (ImGui::MenuItem("Get Block Header")) {
+                                enablesendbtn = true;
+                                enabletransactions = false;
+                                action = GET_BLOCK_HEADER;
+                        }
+                        break;
+                    case GET_BLOCKS:
+                        if (ImGui::MenuItem("Get Blocks")) {
+                                enablesendbtn = true;
+                                enabletransactions = false;
+                                action = GET_BLOCKS;
+                        }
+                        break;
                     }
+                           
                 }
                 ImGui::EndMenu();
             }
             if (enabletransactions) {
                 ImGui::InputInt("Value to transfer", &valueToTransfer, 1, 100);
                 ImGui::InputText("Public key", bufKey, MAXIMUM_KEY_LENGTH + 1);
+                params[""] = valueToTransfer;
+                params[""] = string (bufKey);
             }
             if (enablesendbtn && ImGui::Button("Send")) {    // Buttons return true when clicked (most widgets return true when edited/activated)
                 publicKey = string(bufKey);
                 my_log.AddLog("A message was send\n");
                 mode = WAITING;
+
+                
+                params["IP"] = node2->getIP();
+                params["portDest"] = node2->getServerPort();
+
+                node1->doAction(action, params);
                 my_log.AddLog("The TCP connection ended\n");
             }
             ImGui::End();
@@ -504,7 +566,15 @@ DisplayMode Gui::functions() {
 
     return mode;
 }
-void Gui::IPinput(int * octets, string ip) {
+
+
+void Gui::IPinput(int * octets, string ip, bool localhost) {
+    if (localhost){                                                     //Si solo permite conexión local
+        octets[0] = 127;
+        octets[1] = 0;
+        octets[1] = 0;
+        octets[1] = 1;
+    } 
     const char * myip= ip.c_str();
     float width = ImGui::CalcItemWidth();
     ImGui::BeginGroup();

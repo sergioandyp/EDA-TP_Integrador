@@ -4,7 +4,8 @@
 
 #include "BlockChain.h"
 #include <string>
-#include "FullNode.h"
+#include "Node.h"
+#include "EDACoinNetwork.h"
 
 #define MAXIMUM_PATH_LENGTH 100
 #define MAXIMUM_KEY_LENGTH 20
@@ -22,7 +23,7 @@ class Gui {
 public:
 
 	//Methods
-	Gui();
+	Gui(EDACoinNetwork & network);
 	~Gui();
 	void setup();
 	DisplayMode functions();
@@ -33,7 +34,7 @@ public:
 
 private:
 	void drawTreeToBMP(double dispWidth, double dispHeight);
-	void IPinput(int* octets, std::string ip);
+	void IPinput(int* octets, std::string ip, bool localhost);
 	ALLEGRO_DISPLAY* display;
 	ALLEGRO_EVENT_QUEUE* queue;
 	ALLEGRO_BITMAP* background;
@@ -57,8 +58,10 @@ private:
 	BlockChain chain;
 	FullCompleteTree<std::string> merkleTree;
 	bool validRoot;
-	FullNode node1;
-	FullNode node2;
+	Node * node1;	// Client node
+	Node * node2;	// Server node
+
+	EDACoinNetwork & myNetwork;
 
 };
 

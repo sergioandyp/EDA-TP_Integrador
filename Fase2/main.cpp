@@ -1,4 +1,5 @@
 #include "mygui.h"
+#include "EDACoinNetwork.h"
 #include "HTTPServer.h"
 #include <iostream>
 
@@ -9,16 +10,18 @@ void testClient();
 
 int main() {
 
-	Gui gui;
+	EDACoinNetwork network;
+
+	Gui gui(network);
 
 	gui.setup();		// Necesario para inicializar la GUI
 
 	while (gui.functions()) { // Esperamos hasta que se cierre la GUI
-		//EDACoinNetwork.updateNodes();
+		network.updateNodes();
 	}
 
 	//testServer();
-	testClient();
+	//testClient();
 
 	return 0;
 }
@@ -45,13 +48,14 @@ void testServer() {
 
 #include "HTTPClient.h"
 void testClient() {
-	HTTPClient clientecito(8080);
-	clientecito.getRequest("127.0.0.1", 80);
+	HTTPClient clientecito(8350);
+	clientecito.getRequest("google.com", 80);
 	while (clientecito.isBusy())
 	{
 		clientecito.clientRun();
 		cout << clientecito.isBusy() << endl;
 	}
-
+	std::string s;
+	std::cin >> s;
 	cout << "RTA: " << clientecito.getContent()<<endl;
 }

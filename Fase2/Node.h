@@ -17,6 +17,16 @@ public:
 
 	virtual void update() = 0;
 
+	virtual std::string getIP() = 0;
+
+	virtual unsigned int getServerPort() = 0;
+
+	virtual unsigned int getClientPort() = 0;
+
+	virtual bool addConnection(Node* node) = 0;
+
+	virtual std::vector<Node*> getNeighbors() = 0;
+
 	virtual ~Node() {}
 
 };

@@ -156,3 +156,7 @@ void HTTPServer::messageSentCb(const boost::system::error_code& error, std::size
 
 	startWaitingConnection();	// Wait for the next connection
 }
+
+unsigned int HTTPServer::getPort() {
+	return acceptor.local_endpoint().port();
+}

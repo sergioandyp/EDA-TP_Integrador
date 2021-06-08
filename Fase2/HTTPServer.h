@@ -23,6 +23,8 @@ public:
 
 	void shutdown();
 
+	unsigned int getPort();
+
 private:
 
 	void connectionReceivedCb(const boost::system::error_code& error);
