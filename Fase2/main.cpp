@@ -48,8 +48,8 @@ void testServer() {
 
 #include "HTTPClient.h"
 void testClient() {
-	HTTPClient clientecito(8350);
-	clientecito.getRequest("google.com", 80);
+	HTTPClient clientecito(25565);
+	clientecito.getRequest("localhost", 80);
 	while (clientecito.isBusy())
 	{
 		clientecito.clientRun();
@@ -58,4 +58,5 @@ void testClient() {
 	std::string s;
 	std::cin >> s;
 	cout << "RTA: " << clientecito.getContent()<<endl;
+
 }

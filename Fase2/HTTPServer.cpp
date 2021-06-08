@@ -37,7 +37,8 @@ bool HTTPServer::start() {
 }
 
 void HTTPServer::run() {
-	io_context.run_one();
+	//io_context.run_one();
+	io_context.poll();
 }
 
 void HTTPServer::shutdown() {

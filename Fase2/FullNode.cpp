@@ -12,7 +12,10 @@ bool FullNode::start() {
 }
 
 void FullNode::update() {
-	server.run();
+	server.run(); 
+
+    if(client.isBusy())
+		client.clientRun();
 
 	if (server.isRequest()) {
 		handleRequest(server.getRequest());
@@ -53,7 +56,6 @@ bool FullNode::doAction(ACTION_ID actionID, map<string, string> params) {
         case TRANSACTION:
         {
             auto Tx = R"(
-		    { "tx":
 			    {
 				    "nTxin": 1,
 				    "nTxout" : 4,
@@ -69,25 +71,15 @@ bool FullNode::doAction(ACTION_ID actionID, map<string, string> params) {
 				    "vout": [
 						    {
 							    "amount": 0,
-							    "publicid" : "91218912199121891218"
-						    },
-						    {
-							    "amount": 1,
-							    "publicid" : "91218912199121891218"
-						    },
-						    {
-							    "amount": 2,
-							    "publicid" : "91218912199121891218"
-						    },
-						    {
-							    "amount": 1,
-							    "publicid" : "91218912199121891218"
-						    }
+							    "publicid" : "2"
+						    }						  
 						    ]
 			    } 
-		    })";
+		    )";
 
             json txJson = json::parse(Tx);
+            txJson["vout"][0]["amount"] = stod(params["amount"]);
+            txJson["vout"][0]["publicid"] = params["pubkey"];
             client.postRequest(host+"/eda_coin/send_tx/", txJson.dump(), (unsigned int) stoi(params["portDest"]));
             return false;
             break;
@@ -336,7 +328,7 @@ bool FullNode::addConnection(Node* node) {
 void FullNode::handleRequest(string request) {
 
 	string url = request.substr(0, request.find('\n'));		// Me quedo solo con la primera linea
-	string path = url.substr(request.find("eda_coin/"));	// me quedo con el path
+	string path = url.substr(url.find("eda_coin/"));	// me quedo con el path
 
 	string params = path.substr(path.find('?'));		// Separo parametros
 	path = path.substr(0, path.find('?'));				// del path

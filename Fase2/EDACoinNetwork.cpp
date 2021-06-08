@@ -6,7 +6,10 @@
 using namespace std;
 
 // Crea un nodo full. Si no se pudo inicializar correctamente se destruye.
-bool EDACoinNetwork::createFull(unsigned int serverPort) {
+bool EDACoinNetwork::createFull(unsigned int port) {
+
+	unsigned int serverPort = port % 2 == 0 ? port : port - 1;	// Si es par, eligo ese para server
+																// si es impar, elijo el anterior para sever
 
 	FullNode* node = new FullNode(serverPort);
 
@@ -69,10 +72,10 @@ bool EDACoinNetwork::makeConnection(unsigned int port1, unsigned int port2) {
 
 	for (Node* node : nodes) {
 		port = node->getServerPort();
-		if (port == port1) {
+		if (port == port1 || port == port1+1) {
 			node1 = node;
 		}
-		else if (port == port2) {
+		else if (port == port2 || port == port2+1) {
 			node2 = node;
 		}
 	}

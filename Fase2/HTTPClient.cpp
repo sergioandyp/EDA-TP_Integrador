@@ -51,26 +51,38 @@ int HTTPClient::getRequest(std::string url, unsigned int puertoDestino) {
     curl_easy_setopt(handle, CURLOPT_PORT, (long) puertoDestino);
     curl_easy_setopt(handle, CURLOPT_FOLLOWLOCATION, 1L);
     curl_easy_setopt(handle, CURLOPT_PROTOCOLS, CURLPROTO_HTTP | CURLPROTO_HTTPS);
-    curl_easy_setopt(handle, CURLOPT_FORBID_REUSE, 1L);
+    curl_easy_setopt(handle, CURLOPT_FRESH_CONNECT, 1L);
     curl_easy_setopt(handle, CURLOPT_HEADERFUNCTION, getHeader);
     curl_easy_setopt(handle, CURLOPT_HEADERDATA, &header);
     curl_easy_setopt(handle, CURLOPT_WRITEDATA, &content);
     curl_easy_setopt(handle, CURLOPT_WRITEFUNCTION, getData);
     curl_multi_add_handle(multiHandle, handle);
-    curl_multi_perform(multiHandle, &busy);
+    //curl_multi_perform(multiHandle, &busy);
+    busy = 1;
     return 1;
 }
 
 // Devuelve 0 si no se termino la comunicación
 // Devuelve 1 si se termino la comunicación
 int HTTPClient::clientRun() {
+    CURLMsg* msg;
+    int queue;
+
     curl_multi_perform(multiHandle, &busy);
 
-    if (!busy)
-    {
-        this->clientCleanUp();
-        return 1;
+    msg = curl_multi_info_read(multiHandle, &queue);
+    
+    if (msg != NULL && msg->msg == CURLMSG_DONE) {
+        curl_easy_cleanup(msg->easy_handle);
     }
+
+
+    //if (!busy)
+    //{
+    //    this->clientCleanUp();
+    //    return 1;
+    //}
+
     return 0;
 }
 

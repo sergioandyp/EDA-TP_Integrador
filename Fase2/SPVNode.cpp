@@ -15,6 +15,9 @@ bool SPVNode::start() {
 void SPVNode::update() {
 	server.run();
 
+	if(client.isBusy())
+		client.clientRun();
+
 	if (server.isRequest()) {
 		handleRequest(server.getRequest());
 	}

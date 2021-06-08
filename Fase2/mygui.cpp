@@ -28,7 +28,7 @@
 #define MAXPORT 65535
 
 enum Nodetype {FULL=0, SPV};
-enum Localhost { LOCAL = 0, NOLOCAL };
+enum Localhost {  NOLOCAL = 0, LOCAL };
 
 using namespace std;
 
@@ -254,6 +254,7 @@ DisplayMode Gui::functions() {
     static bool enabletransactions = false; // For TCP transactions
     static float progress = 0.0f; // For progress bar
     static int node_type = false;  // Type of node to initialize
+    static ACTION_ID action;    // Actions of each connection
     
     static ExampleAppLog my_log;
     my_log.Draw("log");
@@ -291,13 +292,15 @@ DisplayMode Gui::functions() {
             if (ImGui::MenuItem("Link")) {
                 state = LINK;
                 mode = NODE;
+                port1=false;
+                port2=false;
             }
             if (ImGui::BeginMenu("Connect")) {
                 ImGui::MenuItem("Select Client");
                 for (int i = 0; i < myNetwork.getNodes().size(); i++) {                   // Para cada nodo
-                    ImGui::MenuItem("Select Server");
                     string temp = ("IP: " + myNetwork.getNodes()[i]->getIP() +" Port: " + to_string(myNetwork.getNodes()[i]->getServerPort()));
                     if (ImGui::BeginMenu(temp.c_str())) {
+                    ImGui::MenuItem("Select Server");
                         for (int j = 0; j < myNetwork.getNodes()[i]->getNeighbors().size(); j++) {                                      // Todos sus vecinos
                             temp = ("IP: " + myNetwork.getNodes()[i]->getNeighbors()[j]->getIP() +" Port: " + to_string(myNetwork.getNodes()[i]->getNeighbors()[j]->getClientPort()));
                             if (ImGui::MenuItem(temp.c_str())) {
@@ -307,7 +310,7 @@ DisplayMode Gui::functions() {
                                 enabletransactions = false;
                                 node1 = (myNetwork.getNodes()[i]);
                                 node2 = (myNetwork.getNodes()[i]->getNeighbors()[j]);
-                                my_log.AddLog("A TCP connection between node IP: %s PORT: %d and IP: %s PORT: %d was stablished\n", myNetwork.getNodes()[i]->getIP(), myNetwork.getNodes()[i]->getServerPort(), myNetwork.getNodes()[i]->getNeighbors()[j]->getIP(), myNetwork.getNodes()[i]->getNeighbors()[j]->getClientPort());
+                                my_log.AddLog("A TCP connection between node IP: %s PORT: %d and IP: %s PORT: %d was stablished\n", myNetwork.getNodes()[i]->getIP().c_str(), myNetwork.getNodes()[i]->getServerPort(), myNetwork.getNodes()[i]->getNeighbors()[j]->getIP().c_str(), myNetwork.getNodes()[i]->getNeighbors()[j]->getClientPort());
                             }
                         }
                         ImGui::EndMenu();
@@ -454,11 +457,12 @@ DisplayMode Gui::functions() {
             break;
 
         case LINK:
+            set_to_local(LOCAL);
             ImGui::Begin("Neighbor Selector");
             ImGui::InputInt("Port1", &port1, 1, 100);
-            IPinput(octets1, "IP1", LOCAL);
+            IPinput(octets1, "IP1");
             ImGui::InputInt("Port2", &port2, 1, 100);
-            IPinput(octets2, "IP2", LOCAL); 
+            IPinput(octets2, "IP2"); 
             
             if (ImGui::Button("Link")) {    
                 if (port1 < MAXPORT) {
@@ -481,7 +485,6 @@ DisplayMode Gui::functions() {
             break;
 
         case SEND:
-            ACTION_ID action;
             map<string, string> params;
             ImGui::Begin("Connect");
             if (ImGui::BeginMenu("Select message type")) {
@@ -538,8 +541,8 @@ DisplayMode Gui::functions() {
             if (enabletransactions) {
                 ImGui::InputInt("Value to transfer", &valueToTransfer, 1, 100);
                 ImGui::InputText("Public key", bufKey, MAXIMUM_KEY_LENGTH + 1);
-                params[""] = valueToTransfer;
-                params[""] = string (bufKey);
+                params["amount"] = valueToTransfer;
+                params["pubkey"] = string (bufKey);
             }
             if (enablesendbtn && ImGui::Button("Send")) {    // Buttons return true when clicked (most widgets return true when edited/activated)
                 publicKey = string(bufKey);
@@ -548,7 +551,7 @@ DisplayMode Gui::functions() {
 
                 
                 params["IP"] = node2->getIP();
-                params["portDest"] = node2->getServerPort();
+                params["portDest"] = to_string(node2->getServerPort());
 
                 node1->doAction(action, params);
                 my_log.AddLog("The TCP connection ended\n");
@@ -568,13 +571,7 @@ DisplayMode Gui::functions() {
 }
 
 
-void Gui::IPinput(int * octets, string ip, bool localhost) {
-    if (localhost){                                                     //Si solo permite conexión local
-        octets[0] = 127;
-        octets[1] = 0;
-        octets[1] = 0;
-        octets[1] = 1;
-    } 
+void Gui::IPinput(int * octets, string ip) {
     const char * myip= ip.c_str();
     float width = ImGui::CalcItemWidth();
     ImGui::BeginGroup();
@@ -649,3 +646,15 @@ void Gui::drawTreeToBMP(double dispWidth, double dispHeight) {      //Dibujo del
 
 }
 
+void Gui::set_to_local(bool localhost){
+    if (localhost){                                                     //Si solo permite conexión local
+        octets1[0] = 127;
+        octets1[1] = 0;
+        octets1[2] = 0;
+        octets1[3] = 1;
+        octets2[0] = 127;
+        octets2[1] = 0;
+        octets2[2] = 0;
+        octets2[3] = 1;
+    } 
+}

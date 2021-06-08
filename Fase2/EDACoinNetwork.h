@@ -11,8 +11,8 @@ public:
 	void updateNodes();
 
 	// Crea un nodo. Si no se pudo inicializar correctamente se destruye.
-	bool createFull(unsigned int serverPort);
-	bool createSPV(unsigned int serverPort);
+	bool createFull(unsigned int port);
+	bool createSPV(unsigned int port);
 
 	std::vector<Node*>& getNodes();
 

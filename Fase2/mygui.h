@@ -34,7 +34,8 @@ public:
 
 private:
 	void drawTreeToBMP(double dispWidth, double dispHeight);
-	void IPinput(int* octets, std::string ip, bool localhost);
+	void IPinput(int* octets, std::string ip);
+	void set_to_local(bool localhost);
 	ALLEGRO_DISPLAY* display;
 	ALLEGRO_EVENT_QUEUE* queue;
 	ALLEGRO_BITMAP* background;
