@@ -252,38 +252,44 @@ bool FullNode::doAction(ACTION_ID actionID, map<string, string> params) {
 	    case MERKLE_BLOCK:
         {    
             //Revisar que lo sgte no explote.
-            auto merkleBlock = R"({"Nombre": "El Pepe"})";
-            /*auto merkleBlock = R"(
+            //auto merkleBlock = R"({"Nombre": "El Pepe"})";
+            auto merkleBlock = R"(
             {
                 "blockid": "ABCD123",
-                "tx":
+                "tx": [
 			    {
 				    "nTxin": 1,
-				    "nTxout" : 4,
-				    "txid" : "712331CE",
-				    "vin" : [
+				    "nTxout": 4,
+				    "txid": "712331CE",
+				    "vin": [
 					    {
 					        "blockid": "0000084D",
-						    "outputIndex" : 2,
-						    "signature" : "00000077",
-						    "txid" : "0000007E"
+						    "outputIndex": 2,
+						    "signature": "00000077",
+						    "txid": "0000007E"
 					    }
 					    ],
 				    "vout": [
 						    {
 							    "amount": 0,
-							    "publicid" : "91218912199121891218"
+							    "publicid": "91218912199121891218"
 						    }
 						    ]
-			    },
+			    }
+                ],
                 "txPos": 123,
                 "merklePath": [
-                    "Id": "1234"
-                ],
-            })";*/
+                    {
+                        "Id": "1234"
+                    }
+                ]
+            })";
+
+
+
 
 		    json merkleBlockJson = json::parse(merkleBlock);  
-            std::cout << std::setw(4) << merkleBlockJson << "\n\n";
+            //std::cout << std::setw(4) << merkleBlockJson << "\n\n";
 		    client.postRequest(host+"/eda_coin/send_merkle_block/", merkleBlockJson.dump(), (unsigned int) stoi(params["portDest"]));	
 		    return true;
             break;

@@ -29,8 +29,8 @@ int HTTPClient::postRequest(std::string url, std::string msg, unsigned int puert
     curl_easy_setopt(handle, CURLOPT_FOLLOWLOCATION, 1L); //Follow HTTP redirects
     curl_easy_setopt(handle, CURLOPT_PROTOCOLS, CURLPROTO_HTTP | CURLPROTO_HTTPS);
     curl_easy_setopt(handle, CURLOPT_FRESH_CONNECT, 1L);
-    curl_easy_setopt(handle, CURLOPT_POSTFIELDS, msg.c_str());
-    curl_easy_setopt(handle, CURLOPT_POSTFIELDSIZE, (long)(msg.length()));
+    curl_easy_setopt(handle, CURLOPT_POSTFIELDS, request.c_str());
+    curl_easy_setopt(handle, CURLOPT_POSTFIELDSIZE, (long)(request.length()));
     curl_easy_setopt(handle, CURLOPT_WRITEDATA, &content);
     curl_easy_setopt(handle, CURLOPT_WRITEFUNCTION, getData);
     curl_multi_add_handle(multiHandle, handle);

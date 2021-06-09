@@ -50,43 +50,32 @@ bool SPVNode::doAction(ACTION_ID actionID, map<string, string> params) {
 	case TRANSACTION:
 	{
 		auto Tx = R"(
-		{ "tx":
-			{
-				"nTxin": 1,
-				"nTxout" : 4,
-				"txid" : "712331CE",
-				"vin" : [
-					{
-					"blockid": "0000084D",
-						"outputIndex" : 2,
-						"signature" : "00000077",
-						"txid" : "0000007E"
-					}
-					],
-				"vout": [
-						{
-							"amount": 0,
-							"publicid" : "91218912199121891218"
-						},
-						{
-							"amount": 1,
-							"publicid" : "91218912199121891218"
-						},
-						{
-							"amount": 2,
-							"publicid" : "91218912199121891218"
-						},
-						{
-							"amount": 1,
-							"publicid" : "91218912199121891218"
-						}
-						]
-			} 
-		})";
+			    {
+				    "nTxin": 1,
+				    "nTxout" : 4,
+				    "txid" : "712331CE",
+				    "vin" : [
+					    {
+					    "blockid": "0000084D",
+						    "outputIndex" : 2,
+						    "signature" : "00000077",
+						    "txid" : "0000007E"
+					    }
+					    ],
+				    "vout": [
+						    {
+							    "amount": 0,
+							    "publicid" : "2"
+						    }						  
+						    ]
+			    } 
+		    )";
 
 		json txJson = json::parse(Tx);
-		client.postRequest(host+"/eda_coin/send_tx/", txJson.dump(), (unsigned int) stoi(params["portDest"]));
-		return true;
+		txJson["vout"][0]["amount"] = stod(params["amount"]);
+		txJson["vout"][0]["publicid"] = params["pubkey"];
+		client.postRequest(host + "/eda_coin/send_tx/", txJson.dump(), (unsigned int)stoi(params["portDest"]));
+		return false;
 		break;
 	}
 	case FILTER: 

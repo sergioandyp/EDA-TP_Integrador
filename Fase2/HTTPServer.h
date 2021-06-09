@@ -32,6 +32,8 @@ private:
 	bool startWaitingConnection();
 
 	void messageReceivedCb(const boost::system::error_code& error, std::size_t size);
+	
+	void bodyReceivedCb(const boost::system::error_code& error, std::size_t size);
 
 	void messageSentCb(const boost::system::error_code& error, std::size_t size);
 

@@ -258,7 +258,43 @@ DisplayMode Gui::functions() {
     
     static ExampleAppLog my_log;
     my_log.Draw("log");
-
+    
+    if (ImGui::Begin("Nodes Representation")){
+        if (ImGui::BeginTable("table", 2))
+        {
+            ImGui::TableNextColumn();
+            ImGui::Text("Node");
+            ImGui::TableNextColumn();
+            ImGui::Text("Neighbor");
+            ImGui::TableNextRow();
+            ImGui::TableNextColumn();
+            for (int i = 0; i < myNetwork.getNodes().size(); i++)
+            {
+                if (myNetwork.getNodes()[i]->getNeighbors().size()) {
+                    for (int j = 0; j < myNetwork.getNodes()[i]->getNeighbors().size(); j++) {
+                        string temp = myNetwork.getNodes()[i]->getIP() + ":" + to_string(myNetwork.getNodes()[i]->getServerPort());
+                        if (!j) {
+                            ImGui::Text(temp.c_str());
+                            
+                        }
+                        ImGui::TableNextColumn();
+                        temp = myNetwork.getNodes()[i]->getNeighbors()[j]->getIP() + ":" + to_string(myNetwork.getNodes()[i]->getNeighbors()[j]->getServerPort());
+                        ImGui::Text(temp.c_str());
+                        ImGui::TableNextRow();
+                        ImGui::TableNextColumn();
+                    }
+                }
+                else {
+                    string temp = myNetwork.getNodes()[i]->getIP() + ":" + to_string(myNetwork.getNodes()[i]->getServerPort());
+                    ImGui::Text(temp.c_str());
+                    ImGui::TableNextRow();
+                    ImGui::TableNextColumn();
+                }
+            }
+            ImGui::EndTable();
+        }
+        ImGui::End();
+    }
     if (ImGui::BeginMainMenuBar())
     {
 

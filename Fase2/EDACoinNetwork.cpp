@@ -24,7 +24,9 @@ bool EDACoinNetwork::createFull(unsigned int port) {
 }
 
 // Crea un nodo SPV. Si no se pudo inicializar correctamente se destruye.
-bool EDACoinNetwork::createSPV(unsigned int serverPort) {
+bool EDACoinNetwork::createSPV(unsigned int port) {
+
+	unsigned int serverPort = port % 2 == 0 ? port : port - 1;	// Si es par, eligo ese para server
 
 	SPVNode* node = new SPVNode(serverPort);
 

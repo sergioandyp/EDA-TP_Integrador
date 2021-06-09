@@ -64,7 +64,8 @@ string HTTPServer::getRequest() {
 void HTTPServer::sendResponse(std::string response_) {
 	response = string("HTTP/1.1 200 OK \r\n") +
 	"Content-Length: "+ to_string(response_.length()) +"\r\n"+
-	"Content-Type: text/html; charset=iso-8859-1\r\n\r\n";
+	"Content-Type: text/json; charset=iso-8859-1\r\n"+
+	"Connection: close\r\n\r\n";
 
 	response += response_;
 
@@ -77,7 +78,6 @@ void HTTPServer::sendResponse(std::string response_) {
 		boost::bind(&HTTPServer::messageSentCb, this,
 			boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
 
-			
 }
 
 
@@ -127,11 +127,11 @@ void HTTPServer::messageReceivedCb(const boost::system::error_code& error, std::
 
 		std::istream is(&buff);				// Guarda toda la data recibida del buffer
 		std::getline(is, request, {});		// como string
+
 #ifdef DEBUG
 		cout << size << " bytes received" << endl;
 		cout << "Received: " << endl << request << endl << endl;
 #endif
-
 	}
 	else {
 #ifdef DEBUG
