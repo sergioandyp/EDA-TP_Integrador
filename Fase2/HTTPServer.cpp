@@ -62,19 +62,22 @@ string HTTPServer::getRequest() {
 }
 
 void HTTPServer::sendResponse(std::string response_) {
-	
-	response = response_;
+	response = string("HTTP/1.1 200 OK \r\n") +
+	"Content-Length: "+ to_string(response_.length()) +"\r\n"+
+	"Content-Type: text/html; charset=iso-8859-1\r\n\r\n";
+
+	response += response_;
 
 #ifdef DEBUG
 	cout << "Sending response" << endl;
 	cout << "Response:" << endl << response << endl << endl;
 #endif
 
-
 	boost::asio::async_write(socket, boost::asio::buffer(response),
 		boost::bind(&HTTPServer::messageSentCb, this,
 			boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
 
+			
 }
 
 

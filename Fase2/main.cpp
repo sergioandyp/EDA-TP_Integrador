@@ -27,7 +27,7 @@ int main() {
 }
 
 void testServer() {
-	HTTPServer server(8530);
+	HTTPServer server(8531);
 	if (!server.start()) {
 		cout << "No se pudo iniciar el server" << endl;
 	}

@@ -44,12 +44,12 @@ void EDACoinNetwork::updateNodes() {
 	}
 }
 
-vector<ACTION_ID> EDACoinNetwork::getActionsBetween(Node* node1, Node* node2) {
+vector<ACTION_ID> EDACoinNetwork::getActionsBetween(Node* senderNode, Node* receiverNode) {
 
 	vector<ACTION_ID> actions;
 
-	for (ACTION_ID sendAction : node1->getSendActions()) {
-		for (ACTION_ID receiveAction : node1->getSendActions()) {
+	for (ACTION_ID sendAction : senderNode->getSendActions()) {
+		for (ACTION_ID receiveAction : receiverNode->getReceiveActions()) {
 			if (sendAction == receiveAction) {
 				actions.push_back(sendAction);
 			}
@@ -65,17 +65,20 @@ std::vector<Node*>& EDACoinNetwork::getNodes() {
 
 bool EDACoinNetwork::makeConnection(unsigned int port1, unsigned int port2) {
 
-	unsigned int port;
+	unsigned int clientPort;
+	unsigned int serverPort;
 
 	Node* node1 = nullptr;
 	Node* node2 = nullptr;
 
 	for (Node* node : nodes) {
-		port = node->getServerPort();
-		if (port == port1 || port == port1+1) {
+		serverPort = node->getServerPort();
+		clientPort = node->getClientPort();
+
+		if (serverPort == port1 || clientPort == port1) {
 			node1 = node;
 		}
-		else if (port == port2 || port == port2+1) {
+		else if (serverPort == port2 || clientPort == port2) {
 			node2 = node;
 		}
 	}

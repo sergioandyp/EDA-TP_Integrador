@@ -1,4 +1,6 @@
 #include "FullNode.h"
+#include <iostream>
+#include <iomanip>
 
 using namespace std;
 using namespace nlohmann;
@@ -250,9 +252,10 @@ bool FullNode::doAction(ACTION_ID actionID, map<string, string> params) {
 	    case MERKLE_BLOCK:
         {    
             //Revisar que lo sgte no explote.
-            auto merkleBlock = R"(
+            auto merkleBlock = R"({"Nombre": "El Pepe"})";
+            /*auto merkleBlock = R"(
             {
-                “blockid”: string,
+                "blockid": "ABCD123",
                 "tx":
 			    {
 				    "nTxin": 1,
@@ -260,7 +263,7 @@ bool FullNode::doAction(ACTION_ID actionID, map<string, string> params) {
 				    "txid" : "712331CE",
 				    "vin" : [
 					    {
-					    "blockid": "0000084D",
+					        "blockid": "0000084D",
 						    "outputIndex" : 2,
 						    "signature" : "00000077",
 						    "txid" : "0000007E"
@@ -270,30 +273,17 @@ bool FullNode::doAction(ACTION_ID actionID, map<string, string> params) {
 						    {
 							    "amount": 0,
 							    "publicid" : "91218912199121891218"
-						    },
-						    {
-							    "amount": 1,
-							    "publicid" : "91218912199121891218"
-						    },
-						    {
-							    "amount": 2,
-							    "publicid" : "91218912199121891218"
-						    },
-						    {
-							    "amount": 1,
-							    "publicid" : "91218912199121891218"
 						    }
 						    ]
 			    },
-                “txPos”: number,
-                “merklePath”: [
-                    “Id”: “1234”,
-                    “Id”: “4321”,
-                    “Id”: “2314”
+                "txPos": 123,
+                "merklePath": [
+                    "Id": "1234"
                 ],
-                })";
+            })";*/
 
-		    json merkleBlockJson = json::parse(merkleBlock);
+		    json merkleBlockJson = json::parse(merkleBlock);  
+            std::cout << std::setw(4) << merkleBlockJson << "\n\n";
 		    client.postRequest(host+"/eda_coin/send_merkle_block/", merkleBlockJson.dump(), (unsigned int) stoi(params["portDest"]));	
 		    return true;
             break;
@@ -330,8 +320,11 @@ void FullNode::handleRequest(string request) {
 	string url = request.substr(0, request.find('\n'));		// Me quedo solo con la primera linea
 	string path = url.substr(url.find("eda_coin/"));	// me quedo con el path
 
-	string params = path.substr(path.find('?'));		// Separo parametros
-	path = path.substr(0, path.find('?'));				// del path
+    string params;
+    if (path.find('?') != path.npos) {
+        params = path.substr(path.find('?'));		// Separo parametros
+        path = path.substr(0, path.find('?'));				// del path
+    }
 
 	if (path.find("send_block") != path.npos) {
 

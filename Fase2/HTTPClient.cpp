@@ -21,17 +21,21 @@ int HTTPClient::postRequest(std::string url, std::string msg, unsigned int puert
     if ((handle == NULL) || (multiHandle == NULL))
         return 0;
 
+    curl_easy_setopt(handle, CURLOPT_VERBOSE, 1L);
+
     curl_easy_setopt(handle, CURLOPT_LOCALPORT, this->port);
     curl_easy_setopt(handle, CURLOPT_URL, url.c_str());
     curl_easy_setopt(handle, CURLOPT_PORT, (long)puertoDestino);
     curl_easy_setopt(handle, CURLOPT_FOLLOWLOCATION, 1L); //Follow HTTP redirects
     curl_easy_setopt(handle, CURLOPT_PROTOCOLS, CURLPROTO_HTTP | CURLPROTO_HTTPS);
+    curl_easy_setopt(handle, CURLOPT_FRESH_CONNECT, 1L);
     curl_easy_setopt(handle, CURLOPT_POSTFIELDS, msg.c_str());
     curl_easy_setopt(handle, CURLOPT_POSTFIELDSIZE, (long)(msg.length()));
     curl_easy_setopt(handle, CURLOPT_WRITEDATA, &content);
     curl_easy_setopt(handle, CURLOPT_WRITEFUNCTION, getData);
     curl_multi_add_handle(multiHandle, handle);
-    curl_multi_perform(multiHandle, &busy);
+    //curl_multi_perform(multiHandle, &busy);
+    busy = 1;
     return 1;
 }
 
@@ -52,12 +56,12 @@ int HTTPClient::getRequest(std::string url, unsigned int puertoDestino) {
     curl_easy_setopt(handle, CURLOPT_FOLLOWLOCATION, 1L);
     curl_easy_setopt(handle, CURLOPT_PROTOCOLS, CURLPROTO_HTTP | CURLPROTO_HTTPS);
     curl_easy_setopt(handle, CURLOPT_FRESH_CONNECT, 1L);
+    //curl_easy_setopt(handle, CURLOPT_FORBID_REUSE, 1L);
     curl_easy_setopt(handle, CURLOPT_HEADERFUNCTION, getHeader);
     curl_easy_setopt(handle, CURLOPT_HEADERDATA, &header);
     curl_easy_setopt(handle, CURLOPT_WRITEDATA, &content);
     curl_easy_setopt(handle, CURLOPT_WRITEFUNCTION, getData);
     curl_multi_add_handle(multiHandle, handle);
-    //curl_multi_perform(multiHandle, &busy);
     busy = 1;
     return 1;
 }
@@ -75,8 +79,7 @@ int HTTPClient::clientRun() {
     if (msg != NULL && msg->msg == CURLMSG_DONE) {
         curl_easy_cleanup(msg->easy_handle);
     }
-
-
+     
     //if (!busy)
     //{
     //    this->clientCleanUp();

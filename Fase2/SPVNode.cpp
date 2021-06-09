@@ -91,7 +91,7 @@ bool SPVNode::doAction(ACTION_ID actionID, map<string, string> params) {
 	}
 	case FILTER: 
 	{	
-		auto filter = R"({“Key”: “pubkey1”})";
+		auto filter = R"({"Key": "pubkey1"})";
 		json filterJson = json::parse(filter);
 
 		client.postRequest(host+"/eda_coin/send_filter/", filterJson.dump(), (unsigned int) stoi(params["portDest"]));
@@ -121,11 +121,19 @@ std::vector<Node*> SPVNode::getNeighbors(){
 void SPVNode::handleRequest(string request) {
 
 	string url = request.substr(0, request.find('\n'));		// Me quedo solo con la primera linea
-	string path = url.substr(request.find("eda_coin/"));	// me quedo con el path
+	
+	string path;
+	if (request.find("eda_coin/") != request.npos) {
+		path = url.substr(request.find("eda_coin/"));	// me quedo con el path
+	}
+	
 	string body = request.substr(request.find('\n'));		// y el body
 
-	string params = path.substr(path.find('?'));		// Separo parametros
-	path = path.substr(0, path.find('?'));				// del path
+	string params;
+	if (path.find('?') != path.npos) {
+		params = path.substr(path.find('?'));		// Separo parametros
+		path = path.substr(0, path.find('?'));				// del path
+	}
 
 	if (path.find("send_merkle_block") != path.npos) {
 

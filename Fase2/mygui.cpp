@@ -516,7 +516,7 @@ DisplayMode Gui::functions() {
                         if (ImGui::MenuItem("Filter")) {
                                 enablesendbtn = true;
                                 enabletransactions = false;
-                                action = BLOCK;
+                                action = FILTER;
                         }
                         break;
                     case GET_BLOCK_HEADER:
@@ -541,7 +541,7 @@ DisplayMode Gui::functions() {
             if (enabletransactions) {
                 ImGui::InputInt("Value to transfer", &valueToTransfer, 1, 100);
                 ImGui::InputText("Public key", bufKey, MAXIMUM_KEY_LENGTH + 1);
-                params["amount"] = valueToTransfer;
+                params["amount"] = to_string(valueToTransfer);
                 params["pubkey"] = string (bufKey);
             }
             if (enablesendbtn && ImGui::Button("Send")) {    // Buttons return true when clicked (most widgets return true when edited/activated)
