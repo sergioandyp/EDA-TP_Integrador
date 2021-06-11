@@ -161,7 +161,7 @@ Gui::Gui(EDACoinNetwork & network) : myNetwork(network), bufPath("blockchain_sam
     //al_set_new_display_flags(ALLEGRO_RESIZABLE);
     display = al_create_display(WIDTH, HEIGH);
     treeBMP = al_create_bitmap(WIDTH, HEIGH);
-    al_set_window_title(display, "TPF - Grupo 2 - Fase 2");
+    al_set_window_title(display, "TPF - Grupo 2 - Fase 1");
     queue = al_create_event_queue();
     al_register_event_source(queue, al_get_display_event_source(display));
     al_register_event_source(queue, al_get_keyboard_event_source());
