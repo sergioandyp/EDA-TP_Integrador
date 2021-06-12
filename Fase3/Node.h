@@ -19,6 +19,8 @@ public:
 
 	virtual std::string getIP() = 0;
 
+	//virtual std::string getPublicKey() = 0;
+
 	virtual unsigned int getServerPort() = 0;
 
 	virtual unsigned int getClientPort() = 0;

@@ -6,11 +6,12 @@
 #include "FullCompleteTree.h"
 #include "Transaction.h"
 
+class MinerNode;
+
 class BlockHeader {
 public:
 	double height;
 	unsigned int nonce;
-	std::string blockId;
 	std::string prevBlockId;
 	std::string merkleRoot;
 };
@@ -33,11 +34,13 @@ public:
 	std::vector<Transaction> getBlockTxs();
 	unsigned int getBlockNonce();
 	int getBlockNTx();
+	void setNonce(unsigned int nonce);
+	std::string getHash();
+	void setId(std::string ID);
 
 private:
-
 	BlockHeader header;
-
+	std::string blockId;
 	std::vector<Transaction> txs;	// Vector de transacciones.
 
 	std::string hexCode(const unsigned int id);

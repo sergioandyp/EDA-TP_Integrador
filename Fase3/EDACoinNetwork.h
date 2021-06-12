@@ -13,6 +13,7 @@ public:
 	// Crea un nodo. Si no se pudo inicializar correctamente se destruye.
 	bool createFull(unsigned int port);
 	bool createSPV(unsigned int port);
+	bool createMiner(unsigned int port);
 
 	std::vector<Node*>& getNodes();
 

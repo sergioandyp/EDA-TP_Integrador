@@ -7,6 +7,8 @@
 #include <string>
 #include <map>
 #include <nlohmann/json.hpp>
+#include <cryptopp/eccrypto.h>
+#include <cryptopp/osrng.h>
 
 
 class FullNode : public Node {
@@ -37,12 +39,16 @@ public:
     virtual std::vector<Node*> getNeighbors();
 
 
-private:
+protected:
     std::vector<Block> blocks;
     std::vector<Node*> neighbors;
     HTTPServer server;
     HTTPClient client;
     std::string IP;
+    
+    CryptoPP::ECDSA<CryptoPP::ECP, CryptoPP::SHA256>::PrivateKey privateKey;
+    CryptoPP::ECDSA<CryptoPP::ECP, CryptoPP::SHA256>::PublicKey publicKey;
+    CryptoPP::AutoSeededRandomPool prng;
 
     void handleRequest(std::string request);
     void sendResponse(bool status, nlohmann::json result);

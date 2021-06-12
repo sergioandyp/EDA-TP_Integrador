@@ -2,6 +2,7 @@
 
 #include "FullNode.h"
 #include "SPVNode.h"
+#include "MinerNode.h"
 
 using namespace std;
 
@@ -29,6 +30,23 @@ bool EDACoinNetwork::createSPV(unsigned int port) {
 	unsigned int serverPort = port % 2 == 0 ? port : port - 1;	// Si es par, eligo ese para server
 
 	SPVNode* node = new SPVNode(serverPort);
+
+	if (!node->start()) {
+		delete node;
+		return false;
+	}
+
+	nodes.push_back(node);
+
+	return true;
+}
+
+bool EDACoinNetwork::createMiner(unsigned int port) {
+
+	unsigned int serverPort = port % 2 == 0 ? port : port - 1;	// Si es par, eligo ese para server
+																// si es impar, elijo el anterior para sever
+
+	MinerNode* node = new MinerNode(serverPort);
 
 	if (!node->start()) {
 		delete node;

@@ -1,10 +1,27 @@
 #include "SPVNode.h"
 
+#include <cryptopp/asn.h>
+#include <cryptopp/oids.h>	// ASN1
+#include <cryptopp/cryptlib.h>
+#include <cryptopp/secblock.h>
+#include <cryptopp/filters.h>
+#include <cryptopp/integer.h>
+#include <cryptopp/osrng.h>
+#include <cryptopp/files.h>
+#include <cryptopp/sha.h>
+
+
+
+
 using namespace std;
 using namespace nlohmann;
+using namespace CryptoPP;
 
-SPVNode::SPVNode(unsigned int serverPort) : server(serverPort), client(serverPort+1), IP("127.0.0.1")
+SPVNode::SPVNode(unsigned int serverPort) : server(serverPort), client(serverPort+1), IP("127.0.0.1"), prng()
 {
+	privateKey.Initialize( prng, ASN1::secp256k1() );
+	privateKey.Validate( prng, 3 );
+	privateKey.MakePublicKey(publicKey);
 }
 
 bool SPVNode::start() {

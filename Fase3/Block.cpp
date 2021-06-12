@@ -4,14 +4,51 @@
 #include <string>
 #include <cmath>
 #include <nlohmann/json.hpp>
+#include <cryptopp/eccrypto.h>
+#include <cryptopp/sha.h>
+#include <cryptopp/hex.h>
+#include <cryptopp/files.h>
+
+//#define DEBUG
 
 using namespace std;
 using namespace nlohmann;
 
+string Block::getHash() {
+	json headerJSON;
+	headerJSON["height"] = header.height;
+	headerJSON["nonce"] = header.nonce;
+	headerJSON["previousblockid"] = header.prevBlockId;
+	headerJSON["merkleroot"] = header.merkleRoot;
+
+	CryptoPP::SHA256 hash;
+	string msg = headerJSON.dump();
+	string digest;
+
+	hash.Update((const CryptoPP::byte*)msg.data(), msg.size());
+	digest.resize(hash.DigestSize());
+	hash.Final((CryptoPP::byte*)&digest[0]);
+
+	CryptoPP::HexEncoder encoder(new CryptoPP::FileSink(std::cout));
+
+	string output;
+	encoder.Attach(new CryptoPP::StringSink(output));
+	encoder.Put((CryptoPP::byte*)&digest[0], sizeof(digest));
+	encoder.MessageEnd();
+
+#ifdef DEBUG
+	cout << endl << endl << "Header: " << msg << endl;
+	cout << "Hash: " << output << endl << endl;
+#endif
+
+
+	return output;
+
+}
+
 Block::Block()
 {
 }
-
 
 Block::Block(const std::string& jsonString) {
 	json fromJSON =  nlohmann::json::parse(jsonString);
@@ -24,12 +61,19 @@ Block::Block(const std::string& jsonString) {
 
 	// Cargamos la información del JSON
 	header.nonce = fromJSON["nonce"];
-	header.blockId = fromJSON["blockid"];
+	blockId = fromJSON["blockid"];
 	header.prevBlockId = fromJSON["previousblockid"];
 	header.merkleRoot = fromJSON["merkleroot"];
 	header.height = fromJSON["height"];
 }
 
+void Block::setNonce(unsigned int nonce_){
+	header.nonce = nonce_;
+}
+
+void Block::setId(std::string ID){
+	blockId = ID;
+}
 
 FullCompleteTree<string> Block::getMerkleTree() {
 
@@ -93,7 +137,7 @@ string Block::hexCode(const unsigned int id) {
 }
 
 string Block::getBlockId(){
-	return header.blockId;
+	return blockId;
 }
 string Block::getPrevBlockId(){
 	return header.prevBlockId;

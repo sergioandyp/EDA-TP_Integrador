@@ -496,7 +496,7 @@ DisplayMode Gui::functions() {
 
                     }
                     else if (node_type == MINER) {
-                        //Do sth
+                        myNetwork.createMiner(port1);
                         my_log.AddLog("A new local Miner node was created - Port: %d.\n", port1);
 
                     }

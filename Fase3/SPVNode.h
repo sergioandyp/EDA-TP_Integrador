@@ -7,6 +7,8 @@
 #include <vector>
 #include <string>
 #include <nlohmann/json.hpp>
+#include <cryptopp/eccrypto.h>
+#include <cryptopp/osrng.h>
 
 class SPVNode : public Node {
 public:
@@ -42,6 +44,10 @@ private:
 	HTTPServer server;
 	HTTPClient client;
 	std::string IP;
+
+    CryptoPP::ECDSA<CryptoPP::ECP, CryptoPP::SHA256>::PrivateKey privateKey;
+    CryptoPP::ECDSA<CryptoPP::ECP, CryptoPP::SHA256>::PublicKey publicKey;
+    CryptoPP::AutoSeededRandomPool prng;
 
 	void handleRequest(std::string request);
 	void sendResponse(bool status, nlohmann::json result);
