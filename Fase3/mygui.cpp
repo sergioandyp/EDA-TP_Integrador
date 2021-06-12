@@ -27,7 +27,7 @@
 
 #define MAXPORT 65535
 
-enum Nodetype {FULL=0, SPV};
+enum Nodetype {FULL=0, SPV, MINER};
 enum Localhost {  NOLOCAL = 0, LOCAL };
 
 using namespace std;
@@ -161,7 +161,7 @@ Gui::Gui(EDACoinNetwork & network) : myNetwork(network), bufPath("blockchain_sam
     //al_set_new_display_flags(ALLEGRO_RESIZABLE);
     display = al_create_display(WIDTH, HEIGH);
     treeBMP = al_create_bitmap(WIDTH, HEIGH);
-    al_set_window_title(display, "TPF - Grupo 2 - Fase 1");
+    al_set_window_title(display, "TPF - Grupo 2 - Fase 3");
     queue = al_create_event_queue();
     al_register_event_source(queue, al_get_display_event_source(display));
     al_register_event_source(queue, al_get_keyboard_event_source());
@@ -323,6 +323,11 @@ DisplayMode Gui::functions() {
                     state = CREATE;
                     mode = NODE;
                 }
+                if (ImGui::MenuItem("Miner")) {
+                    node_type = MINER;
+                    state = CREATE;
+                    mode = NODE;
+                }
                 ImGui::EndMenu();
             }
             if (ImGui::MenuItem("Link")) {
@@ -346,7 +351,7 @@ DisplayMode Gui::functions() {
                                 enabletransactions = false;
                                 node1 = (myNetwork.getNodes()[i]);
                                 node2 = (myNetwork.getNodes()[i]->getNeighbors()[j]);
-                                my_log.AddLog("A TCP connection between node IP: %s PORT: %d and IP: %s PORT: %d was stablished\n", myNetwork.getNodes()[i]->getIP().c_str(), myNetwork.getNodes()[i]->getServerPort(), myNetwork.getNodes()[i]->getNeighbors()[j]->getIP().c_str(), myNetwork.getNodes()[i]->getNeighbors()[j]->getClientPort());
+                                my_log.AddLog("A TCP connection between node IP: %s PORT: %d and IP: %s PORT: %d was stablished.\n", myNetwork.getNodes()[i]->getIP().c_str(), myNetwork.getNodes()[i]->getServerPort(), myNetwork.getNodes()[i]->getNeighbors()[j]->getIP().c_str(), myNetwork.getNodes()[i]->getNeighbors()[j]->getClientPort());
                             }
                         }
                         ImGui::EndMenu();
@@ -480,12 +485,21 @@ DisplayMode Gui::functions() {
             ImGui::InputInt("Port", &port1, 1, 100);
             if (ImGui::Button("Create")) {    // Buttons return true when clicked (most widgets return true when edited/activated)
                 if (port1 < MAXPORT) {
-                    my_log.AddLog("A new local node was created - Port: %d\n", port1);
                     mode = WAITING;
-                    if (node_type == FULL)
+                    if (node_type == FULL) {
                         myNetwork.createFull(port1);
-                    else if (node_type == SPV)
+                        my_log.AddLog("A new local Full node was created - Port: %d.\n", port1);
+                    }
+                    else if (node_type == SPV) {
                         myNetwork.createSPV(port1);
+                        my_log.AddLog("A new local SPV node was created - Port: %d.\n", port1);
+
+                    }
+                    else if (node_type == MINER) {
+                        //Do sth
+                        my_log.AddLog("A new local Miner node was created - Port: %d.\n", port1);
+
+                    }
                 }
             }
             ImGui::End();
@@ -509,11 +523,11 @@ DisplayMode Gui::functions() {
 #endif
                     if (myNetwork.makeConnection(port1, port2)) {     // Si la conexión fue exitosa
                         mode = WAITING;
-                        my_log.AddLog("The node %d.%d.%d.%d: port %d was connected with the node %d.%d.%d.%d: port %d\n", octets1[0], octets1[1], octets1[2], octets1[3], port1, octets2[0], octets2[1], octets2[2], octets2[3], port2);
+                        my_log.AddLog("The node %d.%d.%d.%d: port %d was connected with the node %d.%d.%d.%d: port %d.\n", octets1[0], octets1[1], octets1[2], octets1[3], port1, octets2[0], octets2[1], octets2[2], octets2[3], port2);
 
                     }
                     else
-                        my_log.AddLog("The connection between the node %d.%d.%d.%d: port %d and the node %d.%d.%d.%d: port %d failed\n", octets1[0], octets1[1], octets1[2], octets1[3], port1, octets2[0], octets2[1], octets2[2], octets2[3], port2);
+                        my_log.AddLog("The connection between the node %d.%d.%d.%d: port %d and the node %d.%d.%d.%d: port %d failed.\n", octets1[0], octets1[1], octets1[2], octets1[3], port1, octets2[0], octets2[1], octets2[2], octets2[3], port2);
                 }
             }
             ImGui::End();
@@ -581,15 +595,40 @@ DisplayMode Gui::functions() {
             }
             if (enablesendbtn && ImGui::Button("Send")) {    // Buttons return true when clicked (most widgets return true when edited/activated)
                 publicKey = string(bufKey);
-                my_log.AddLog("A message was send\n");
-                mode = WAITING;
+                
 
                 
                 params["IP"] = node2->getIP();
                 params["portDest"] = to_string(node2->getServerPort());
 
-                node1->doAction(action, params);
-                my_log.AddLog("The TCP connection ended\n");
+                if (!node1->doAction(action, params)) {
+                    my_log.AddLog("The transaction was invalid.");
+                }
+                else {
+                    switch (action)
+                    {
+                    case BLOCK:
+                        my_log.AddLog("A block was sent.\n");
+                        break;
+                    case TRANSACTION:
+                        my_log.AddLog("A transaction of % was sent.\n", valueToTransfer);
+                        break;
+                    case MERKLE_BLOCK:
+                        my_log.AddLog("A merkle block was sent.\n");
+                        break;
+                    case FILTER:
+                        my_log.AddLog("A filter was sent.\n");
+                        break;
+                    case GET_BLOCK_HEADER:
+                        my_log.AddLog("A block header was obtained.\n");
+                        break;
+                    case GET_BLOCKS:
+                        my_log.AddLog("A block was obtained.\n");
+                        break;
+                    }
+                }
+                mode = WAITING;
+                my_log.AddLog("The TCP connection ended.\n");
             }
             ImGui::End();
             break;

@@ -153,6 +153,7 @@
     <ClCompile Include="HTTPClient.cpp" />
     <ClCompile Include="HTTPServer.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MinerNode.cpp" />
     <ClCompile Include="mygui.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="SPVNode.cpp" />
@@ -174,6 +175,7 @@
     <ClInclude Include="FullNode.h" />
     <ClInclude Include="HTTPClient.h" />
     <ClInclude Include="HTTPServer.h" />
+    <ClInclude Include="MinerNode.h" />
     <ClInclude Include="mygui.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="SPVNode.h" />
