@@ -7,8 +7,8 @@ class MinerNode :
 {
 public: 
     MinerNode();
-    int mining();
-    int saveTransaction();
+    int mining(int ZerosCount);
+    int saveTransaction(Transaction tx);
     int stopMining();
     
 private:
