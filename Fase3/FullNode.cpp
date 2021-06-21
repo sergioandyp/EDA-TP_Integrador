@@ -13,6 +13,8 @@
 #include <cryptopp/sha.h>
 #include <cryptopp/hex.h>
 
+#define DEBUG
+
 using namespace std;
 using namespace nlohmann;
 using namespace CryptoPP;
@@ -21,119 +23,15 @@ using namespace CryptoPP;
 FullNode::FullNode(unsigned int serverPort) : server(serverPort), client(serverPort+1) , IP("127.0.0.1"), prng()
 {
 	privateKey.Initialize( prng, ASN1::secp256k1() );
-	privateKey.Validate( prng, 3 );
+	//privateKey.Validate( prng, 3 );
 	privateKey.MakePublicKey(publicKey);
-
-    string key;
-
-    HexEncoder encoder;
-
-    encoder.Attach(new CryptoPP::StringSink(key));
-
-    publicKey.Save(encoder);
-
-    /// <summary>
-    /// //
-    string test;
-    StringSink ss(test);
-    publicKey.Save(ss);
-    cout << "TEST: " << test << endl;
-    //{
-    //   test = "";
-    //    ByteQueue queue;
-    //    publicKey.Save(queue);
-    //    //FileSink file(cout);
-
-    //    queue.CopyTo(ss);
-    //    ss.MessageEnd();
-    //}
-    ECDSA<ECP, SHA256>::PublicKey pub2;
-    {
-        ByteQueue queue;
-        //FileSource file("public.key", true /*pumpAll*/);
-        StringSource ss(test, true);
-        ss.TransferTo(queue);
-        queue.MessageEnd();
-
-        pub2.Load(queue);
-    }
+    publicKey.AccessGroupParameters().SetPointCompression(true);      // Clave comprimida
 
 
-    //pub2.Load(ss);
-    cout << "test X: " << pub2.GetPublicElement().x << endl;
-    cout << "test Y: " << pub2.GetPublicElement().y << endl;
-    /// </summary>
-    /// <param name="serverPort"></param>
+#ifdef DEBUG
+    cout << "Creado nodo Full en " << IP << ":" << serverPort << " con publicKey: " << getPublicKey() << endl;
+#endif
 
-    cout << "Creado nodo Full en " << IP << ":" << serverPort << " con publicKey: " << key << endl;
-
-    // test
-
-
-    cout << "Original X: " << publicKey.GetPublicElement().x << endl;
-    cout << "Original Y: " << publicKey.GetPublicElement().y << endl;
-
-        // Creacion de la firma
-
-    ECDSA<ECP, SHA256>::Signer signer(privateKey);
-    string msg = "Hola. Este es un mensaje encriptado.";
-
-    // Determine maximum size, allocate a string with the maximum size
-    size_t siglen = signer.MaxSignatureLength();
-    string signature(siglen, 0x00);
-
-    signer.SignMessage(prng, (byte*)msg.data(), msg.size(), (byte*)signature.data());
-    signature.resize(siglen);
-
-    string signStr;
-    encoder.Attach(new CryptoPP::StringSink(signStr));
-    encoder.Put((CryptoPP::byte*)signature.data(), signature.size());
-    encoder.MessageEnd();
-
-    cout << "La firma del mensaje es: " << signStr << endl;
-
-
-
-
-
-        // Verificacion de la firma
-    string pubKeyStr;
-
-    HexDecoder decoder;
-
-    decoder.Attach(new StringSink(pubKeyStr));
-    decoder.Put((byte*)key.data(), key.size());
-    decoder.MessageEnd();
-
-    StringSource sss(pubKeyStr, true);
-
-    cout << "sss: " << pubKeyStr << endl;
-
-    ECDSA<ECP, SHA256>::PublicKey pub;
-
-    pub.Load(sss);
-
-
-    //pub.AccessGroupParameters().Initialize(ASN1::secp256r1());
-
-    //StringSource ss(key, true, new CryptoPP::HexDecoder);
-    //ECP::Point point;
-
-    //pub.GetGroupParameters().GetCurve().DecodePoint(point, ss, ss.MaxRetrievable());
-
-    //pub.SetPublicElement(point);
-
-    cout << "Decoded X: " << pub.GetPublicElement().x << endl;
-    cout << "Decoded Y: " << pub.GetPublicElement().y << endl;
-
-    ECDSA<ECP, SHA256>::Verifier verifier(pub);
-
-    bool checked = verifier.VerifyMessage((byte*)msg.data(), msg.size(), (byte*)signature.data(), signature.size());
-    
-    if (checked)
-        std::cout << "Verified signature on message" << std::endl;
-    else
-        cerr << "Failed to verify signature on message" << std::endl;
 }
 
 bool FullNode::start() {
@@ -520,4 +418,44 @@ unsigned int FullNode::getClientPort(){
 
 unsigned int FullNode::getServerPort(){
 	return server.getPort();
+}
+
+string FullNode::getPublicKey() {
+    string key;
+    publicKey.Save(HexEncoder(new StringSink(key)).Ref());  // Para almacenarlo en ASCII
+    return key;
+}
+
+string FullNode::signMessage(string msg) {
+
+    ECDSA<ECP, SHA256>::Signer signer(privateKey);
+
+    // Determine maximum size, allocate a string with the maximum size
+    size_t siglen = signer.MaxSignatureLength();
+    string signature(siglen, 0x00);
+
+    signer.SignMessage(prng, (byte*)msg.data(), msg.size(), (byte*)signature.data());
+    signature.resize(siglen);
+
+    string signStr;
+    StringSource ss(signature, true, new HexEncoder(new StringSink(signStr)));  // de Hex a ASCII
+
+    return signStr;
+}
+
+bool FullNode::verifyMessage(string msg, string sign, string pubKey) {
+
+    StringSource pubKeyHex(pubKey, true, new HexDecoder);  // HexDecoder pasa de ASCII a hex
+
+    ECDSA<ECP, SHA256>::PublicKey pub;      // Para guardar la clave publicKey recibida
+    pub.AccessGroupParameters().SetPointCompression(true);  // Clave comprimida
+
+    pub.Load(pubKeyHex);
+
+    ECDSA<ECP, SHA256>::Verifier verifier(pub);
+
+    string signHex;
+    StringSource ss(sign, true, new HexDecoder(new StringSink(signHex)));
+    
+    return verifier.VerifyMessage((byte*)msg.data(), msg.size(), (byte*)signHex.data(), signHex.size());
 }

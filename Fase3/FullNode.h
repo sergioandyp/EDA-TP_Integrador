@@ -52,5 +52,12 @@ protected:
 
     void handleRequest(std::string request);
     void sendResponse(bool status, nlohmann::json result);
+    
+    // Devuelve la Public Key del nodo
+    std::string getPublicKey();
+    
+    // Firma un mensaje, devuelve la firma
+    std::string signMessage(std::string msg);
+    bool verifyMessage(std::string msg, std::string sign, std::string pubKey);
 
 };
