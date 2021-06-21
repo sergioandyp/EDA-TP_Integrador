@@ -19,7 +19,6 @@ void MinerNode::update() {
     nonce += (unsigned int) (rand() - RAND_MAX / 2);
     actualBlock.setNonce(nonce);
     string newHash = actualBlock.getHash();
-    //cout << "NEW HASH: " << newHash << endl;
 
     if (newHash.substr(0, N) == (string(N, '0'))) {
         actualBlock.setId(newHash);
@@ -60,7 +59,7 @@ int MinerNode::createBlock() {
             }
         }
         incomingTransactions.erase(incomingTransactions.begin(), incomingTransactions.begin() + txLarge);
-        blockJson["nonce"] = string("00000000") + string("00000000");
+        blockJson["nonce"] = 0;
 
         actualBlock = Block(blockJson.dump());
         return true;
