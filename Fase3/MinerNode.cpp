@@ -11,6 +11,7 @@ using namespace nlohmann;
 MinerNode::MinerNode(unsigned int serverPort) : FullNode(serverPort){
     isMining = 0;
     srand(time(NULL));
+    createBlock();
 }
 
 void MinerNode::update() {
@@ -28,21 +29,27 @@ bool MinerNode::mine() {
         actualBlock.setId(newHash);
 #ifdef DEBUG
         cout << "Encontramos nuevo HASH: \t" << newHash << endl;
+        actualBlock.printHeader();
+        cout << endl;
 #endif
+        FullNode::blocks.push_back(actualBlock);    // Agrega el bloque a la blockchain
+        createBlock();      // Creamos nuevo bloque para minar
         return true;
     }
 
     return false;
 }
 
-// Armar mining
 int MinerNode::createBlock() {
-    // https://www.cryptopp.com/wiki/SHA2
-    // https://www.cryptopp.com/wiki/Hash_Functions 
     try {
         json blockJson;
         blockJson["height"] = FullNode::blocks.size();
-        blockJson["previousblockid"] = FullNode::blocks[FullNode::blocks.size() - 1].getBlockId();
+        if (FullNode::blocks.size() > 0) {
+            blockJson["previousblockid"] = FullNode::blocks[FullNode::blocks.size() - 1].getBlockId();
+        }
+        else {
+            blockJson["previousblockid"] = to_string(0);
+        }
 
         int txLarge = incomingTransactions.size();
         blockJson["nTx"] = txLarge;
@@ -65,13 +72,30 @@ int MinerNode::createBlock() {
                 blockJson["tx"][i]["vout"][j]["amount"] = trans.getOutputs()[j].getAmount();
             }
         }
-        incomingTransactions.erase(incomingTransactions.begin(), incomingTransactions.begin() + txLarge);
+
+        blockJson["tx"][txLarge]["nTxin"] = 0;
+        blockJson["tx"][txLarge]["nTxout"] = 1;
+        blockJson["tx"][txLarge]["txid"] = FullNode::getPublicKey();    // Aca va el hash de la tx
+        blockJson["tx"][txLarge]["vout"][0]["publicid"] = FullNode::getPublicKey();   // Sumo la recompensa por minar
+        blockJson["tx"][txLarge]["vout"][0]["amount"] = 50;
+
+        incomingTransactions.erase(incomingTransactions.begin(), incomingTransactions.begin() + txLarge);   // Borramos de la cola de transacciones
         blockJson["nonce"] = 0;
 
+        blockJson["merkleroot"] = "";
+        blockJson["blockid"] = "";
         actualBlock = Block(blockJson.dump());
+
+        string root = actualBlock.getMerkleTree()[0][0];
+        blockJson["merkleroot"] = root;
+        actualBlock = Block(blockJson.dump());
+
         return true;
     }
     catch (const exception& e) {
+#ifdef DEBUG
+        cout << "Error creating Block: " << e.what() << endl;
+#endif
         return false;
     }
 }
@@ -79,7 +103,3 @@ int MinerNode::createBlock() {
 void MinerNode::saveTransaction(Transaction tx) {
     incomingTransactions.push_back(tx);
 }
-
-//void MinerNode::stopMining() {
-//    isMining = 0;
-//}

@@ -13,6 +13,7 @@
 
 using namespace std;
 using namespace nlohmann;
+using namespace CryptoPP;
 
 string Block::getHash() {
 	json headerJSON;
@@ -90,7 +91,7 @@ FullCompleteTree<string> Block::getMerkleTree() {
 		for (TransactionEntry& entry : tx.getEntries()) {	// Por cada entry en la transacción
 			id += entry.getTxId();								// Concateno los txid
 		}
-		txHashes.push_back(hexCode(generateID((const unsigned char*)id.c_str())));		// Genero ID en HexCodeASCII
+		txHashes.push_back(generateID((const unsigned char*)id.c_str()));		// Genero ID en HexCodeASCII
 	}
 
 	unsigned int lastRow = merkleTree.getHeight();
@@ -108,7 +109,7 @@ FullCompleteTree<string> Block::getMerkleTree() {
 			
 			string concat = merkleTree[i + 1][2 * j] + merkleTree[i + 1][2 * j + 1];
 			
-			merkleTree[i][j] = hexCode(generateID((const unsigned char*)concat.c_str()));
+			merkleTree[i][j] = generateID((const unsigned char*)concat.c_str());
 		}
 	}
 
@@ -116,13 +117,19 @@ FullCompleteTree<string> Block::getMerkleTree() {
 }
 
 // Generador de IDs
-unsigned int Block::generateID(const unsigned char* str) {
-	unsigned int ID = 0;
-	int c;
-	while (c = *str++) {
-		ID = c + (ID << 6) + (ID << 16) - ID;
-	}
-	return ID;
+string Block::generateID(const unsigned char* str) {
+	CryptoPP::SHA256 hash;
+	string msg((char*)str);
+	string digest;
+
+	hash.Update((const CryptoPP::byte*)msg.data(), msg.size());
+	digest.resize(hash.DigestSize());
+	hash.Final((CryptoPP::byte*)&digest[0]);
+
+	string output;
+	StringSource ss(digest, true, new HexEncoder(new StringSink(output)));
+
+	return output;
 }
 
 // Conversión de decimal a hexadecimal tipo string.
@@ -159,4 +166,13 @@ int Block::getBlockHeight(){
 
 vector<Transaction> Block::getBlockTxs(){
 	return txs;
+}
+
+void Block::printHeader() {
+	cout << "blockID: " << blockId << endl;
+	cout << "height: " << header.height << endl;
+	cout << "merkleRoot: " << header.merkleRoot << endl;
+	cout << "nonce: " << header.nonce << endl;
+	cout << "prevBlockID: " << header.prevBlockId << endl;
+	cout << "nTx: " << txs.size() << endl;
 }

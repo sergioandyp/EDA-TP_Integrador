@@ -37,6 +37,7 @@ public:
 	void setNonce(unsigned int nonce);
 	std::string getHash();
 	void setId(std::string ID);
+	void printHeader();
 
 private:
 	BlockHeader header;
@@ -44,7 +45,7 @@ private:
 	std::vector<Transaction> txs;	// Vector de transacciones.
 
 	std::string hexCode(const unsigned int id);
-	unsigned int generateID(const unsigned char* str);
+	std::string generateID(const unsigned char* str);
 };
 
 #endif //_BLOCK_H_
