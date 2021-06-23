@@ -125,13 +125,28 @@ void HTTPServer::messageReceivedCb(const boost::system::error_code& error, std::
 
 	if (!error) {
 
-		std::istream is(&buff);				// Guarda toda la data recibida del buffer
-		std::getline(is, request, {});		// como string
+		istream is(&buff);				// Guarda toda la data recibida del buffer
+		getline(is, request, {});		// como string
+
 
 #ifdef DEBUG
 		cout << size << " bytes received" << endl;
 		cout << "Received: " << endl << request << endl << endl;
 #endif
+
+		if (request.find("Content-Length: ") != request.npos) {
+			string length = request.substr(request.find("Content-Length: ") + string("Content-Length: ").length());
+			length = length.substr(0, length.find('\r'));
+			int len = stoi(length);
+			
+			string body;
+			body.resize(len);
+			socket.read_some(boost::asio::buffer(body, len-(request.size()-size)));
+
+			request += body;
+		}
+
+
 	}
 	else {
 #ifdef DEBUG

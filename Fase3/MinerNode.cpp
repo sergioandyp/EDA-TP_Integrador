@@ -3,10 +3,10 @@
 #include <nlohmann/json.hpp>
 #include <cmath>
 
+#define DEBUG
+
 using namespace std;
 using namespace nlohmann;
-
-#define N   4
 
 MinerNode::MinerNode(unsigned int serverPort) : FullNode(serverPort){
     isMining = 0;
@@ -15,18 +15,25 @@ MinerNode::MinerNode(unsigned int serverPort) : FullNode(serverPort){
 
 void MinerNode::update() {
     this->FullNode::update();
+    mine();
+}
+
+bool MinerNode::mine() {
     static unsigned int nonce;
-    nonce += (unsigned int) (rand() - RAND_MAX / 2);
+    nonce += (unsigned int)(rand() - RAND_MAX / 2);
     actualBlock.setNonce(nonce);
     string newHash = actualBlock.getHash();
 
-    if (newHash.substr(0, N) == (string(N, '0'))) {
+    if (newHash.substr(0, CHALLENGE) == (string(CHALLENGE, '0'))) {
         actualBlock.setId(newHash);
+#ifdef DEBUG
         cout << "Encontramos nuevo HASH: \t" << newHash << endl;
+#endif
+        return true;
     }
 
+    return false;
 }
-
 
 // Armar mining
 int MinerNode::createBlock() {

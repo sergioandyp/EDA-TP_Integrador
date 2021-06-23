@@ -4,6 +4,8 @@
 #include <vector>
 #include <map>
 
+#define CHALLENGE   4		// Cantidad de 0's para el Hash del bloqe
+
 enum ACTION_ID { BLOCK, TRANSACTION, MERKLE_BLOCK, FILTER, GET_BLOCK_HEADER, GET_BLOCKS };
 
 class Node {

@@ -58,6 +58,7 @@ vector<TransactionOut> Transaction::getOutputs(){
 	return outputs;
 }
 
+
 string TransactionEntry ::getBlockId(){
 	return blockId;
 }
@@ -67,7 +68,7 @@ string TransactionEntry::getTxId(){
 string TransactionEntry::getSignature(){
 	return signature;
 }
-double TransactionEntry::getOutputId(){
+int TransactionEntry::getOutputId(){
 	return outputId;
 }
 

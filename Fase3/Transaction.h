@@ -10,13 +10,13 @@ public:
 	std::string getBlockId();
 	std::string getTxId();
 	std::string getSignature();
-	double getOutputId();
+	int getOutputId();
 
 private:
 	std::string blockId;
 	std::string txId;
 	std::string signature;
-	double outputId;		
+	int outputId;		
 };
 
 class TransactionOut {

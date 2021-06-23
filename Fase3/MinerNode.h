@@ -20,5 +20,7 @@ private:
     std::vector<Transaction> blockTransactions;
     bool isMining;
     Block actualBlock;
+
+    bool mine();
 };
 

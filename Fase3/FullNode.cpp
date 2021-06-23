@@ -108,7 +108,7 @@ bool FullNode::doAction(ACTION_ID actionID, map<string, string> params) {
             txJson["vout"][0]["amount"] = stod(params["amount"]);
             txJson["vout"][0]["publicid"] = params["pubkey"];
             client.postRequest(host+"/eda_coin/send_tx/", txJson.dump(), (unsigned int) stoi(params["portDest"]));
-            return false;
+            return true;
             break;
         }
         case BLOCK:
@@ -271,7 +271,7 @@ bool FullNode::doAction(ACTION_ID actionID, map<string, string> params) {
 
             json blockJson = json::parse(block);
             client.postRequest(host+"/eda_coin/send_block/", blockJson.dump(), (unsigned int) stoi(params["portDest"]));
-            return false;
+            return true;
             break;
         }
 	    case MERKLE_BLOCK:
@@ -331,7 +331,7 @@ bool FullNode::doAction(ACTION_ID actionID, map<string, string> params) {
             break;
        }
 	    default:
-		    return true;
+		    return false;
 		    break;
 	    }
 	    return false;
@@ -357,20 +357,41 @@ void FullNode::handleRequest(string request) {
         path = path.substr(0, path.find('?'));				// del path
     }
 
+    string body = request.substr(request.find("\r\n\r\n")+4);
+
+#ifdef DEBUG
+    cout << "Message received: " << request << endl;
+    cout << "\tURL: " << url << endl;
+    cout << "\tparams: " << params << endl;
+    cout << "\tcontent: " << body << endl;
+#endif
+
 	if (path.find("send_block") != path.npos) {
 
-		/*
-			INTERPRETAR REQUEST
-		*/
+        Block newBlock(body);
+
 		json result = NULL;
-		sendResponse(true, result);
+        bool status = true;
+        if (newBlock.getHash() != newBlock.getBlockId()                             // Bloque invalido
+            || newBlock.getBlockId().substr(0, CHALLENGE) != string(CHALLENGE, '0')) {      // No cumple el challenge
+            status = false;
+            result = 2;
+        }
+
+		sendResponse(status, result);
 	}
 	else if (path.find("send_tx") != path.npos) {
-		/*
-			INTERPRETAR REQUEST
-		*/
-		json result = NULL;
-		sendResponse(true, result);
+
+        Transaction tx(body);
+
+        json result = NULL;
+        bool status = true;
+        if (!verifyTransaction(tx)) {
+            status = false;
+            result = 2;
+        }
+
+		sendResponse(status, result);
 	}
 	else if (path.find("send_filter") != path.npos) {
 		/*
@@ -393,6 +414,10 @@ void FullNode::handleRequest(string request) {
 		json result = NULL;
 		sendResponse(true, result);
 	}
+	else {
+		json result = 1;
+		sendResponse(false, result);
+	}
 
 }
 
@@ -402,7 +427,7 @@ void FullNode::sendResponse(bool status, json result) {
 
 	response["status"] = status;
 
-	response["result"] = NULL;
+	response["result"] = result;
 
 	server.sendResponse(response.dump());
 
@@ -458,4 +483,69 @@ bool FullNode::verifyMessage(string msg, string sign, string pubKey) {
     StringSource ss(sign, true, new HexDecoder(new StringSink(signHex)));
     
     return verifier.VerifyMessage((byte*)msg.data(), msg.size(), (byte*)signHex.data(), signHex.size());
+}
+
+bool FullNode::verifyTransaction(Transaction& trans) {
+
+    for (TransactionEntry& entry : trans.getEntries()) {
+        string msg;
+        
+        TransactionOut* transOut = searchOutput(entry);
+        if (transOut == nullptr) {
+            return false;           // No se puede verificar, ya que la transaccion no esta en la blockchain
+        }
+        
+        msg += entry.getBlockId();		// Concatenamos los campos para hashear
+        msg += entry.getTxId();
+        msg += entry.getOutputId();
+
+        for (TransactionOut& out : trans.getOutputs()) {
+            msg += out.getAmount();
+            msg += out.getPublicId();
+        }
+
+        if (!verifyMessage(msg, entry.getSignature(), transOut->getPublicId())) {
+            return false;   // Transaccion fraudulenta, la firma no corresponde
+        }
+
+    }
+
+    return true;        // Todo OK, transaccion verificada
+}
+
+Block* FullNode::searchBlock(string blockId) {
+    for (Block& block : blocks) {
+        if (block.getBlockId() == blockId)
+            return &block;
+    }
+
+    return nullptr;
+}
+
+Transaction* FullNode::searchTransaction(Block& block, string transId) {
+    for (Transaction& trans : block.getBlockTxs()) {
+        if (trans.getID() == transId)
+            return &trans;
+    }
+
+    return nullptr;
+}
+
+TransactionOut* FullNode::searchOutput(TransactionEntry& entry) {
+
+    Block* block = searchBlock(entry.getBlockId());
+
+    if (block != nullptr) {
+
+        Transaction* trans = searchTransaction(*block, entry.getTxId());
+
+        if (trans != nullptr) {
+            if (trans->getNTxout() > entry.getOutputId()) {
+                return &(trans->getOutputs()[entry.getOutputId()]);
+            }
+        }
+
+    }
+
+    return nullptr;
 }

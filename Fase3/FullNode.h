@@ -59,5 +59,14 @@ protected:
     // Firma un mensaje, devuelve la firma
     std::string signMessage(std::string msg);
     bool verifyMessage(std::string msg, std::string sign, std::string pubKey);
+    bool verifyTransaction(Transaction& trans);
 
+    // Busca un bloque en la blockchain del nodo. Si la encuentra devuelve un puntero al bloque
+    Block* searchBlock(std::string blockId);
+
+    // Busca una transaccion en un bloque. Si la encuentra devuelve un puntero a la transaccion
+    Transaction* searchTransaction(Block& block, std::string transId);
+
+    // Busca la salida correspondiente a una entrada, si la encuentra devuelve un puntero a la salida.
+    TransactionOut* searchOutput(TransactionEntry& entry);
 };
